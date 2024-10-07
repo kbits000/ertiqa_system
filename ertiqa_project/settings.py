@@ -11,7 +11,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-
+from dotenv import load_dotenv
+load_dotenv()
+import os
 
 # import mimetypes
 # mimetypes.add_type("text/css", ".css", True)
@@ -25,10 +27,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # TO BE DELETED AND CHANGED
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ''
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False').lower() in ('true', '1', 't')
 
 ALLOWED_HOSTS = []
 
@@ -86,11 +88,11 @@ WSGI_APPLICATION = 'ertiqa_project.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        'NAME': '',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
     #     "OPTIONS": {
     #         "service": "my_service",
     #         "passfile": ".my_pgpass",
