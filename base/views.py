@@ -421,28 +421,29 @@ def manager_all_added_devices_list(request):
 @login_required(login_url='login')
 def manager_general_statistics(request):
     if request.user.is_superuser:
-        total_spendings = 0
-        spendings_objects = Total_Spendings.objects.all().order_by('added')
-        date_of_first_spendings = spendings_objects[0].added
+        # total_spendings = 0
+        # spendings_objects = Total_Spendings.objects.all().order_by('added')
+        # date_of_first_spendings = spendings_objects[0].added
 
-        for spendings in spendings_objects:
-            total_spendings += spendings.total_spendings
+        # for spendings in spendings_objects:
+        #     total_spendings += spendings.total_spendings
         
-        num_of_inspected_devices = Device.objects.all().count()
-        num_of_refurbished_devices = Refurbished_Device.objects.all().count()
-        num_of_scrapped_devices = Scrapped_Device.objects.all().count()
+        # num_of_inspected_devices = Device.objects.all().count()
+        # num_of_refurbished_devices = Refurbished_Device.objects.all().count()
+        # num_of_scrapped_devices = Scrapped_Device.objects.all().count()
 
-        average_spendings_per_device = total_spendings / num_of_inspected_devices
+        # average_spendings_per_device = total_spendings / num_of_inspected_devices
         
         
-        context= {
-            'total_spendings': total_spendings,
-            'date_of_first_spendings': date_of_first_spendings,
-            'num_of_inspected_devices': num_of_inspected_devices,
-            'num_of_refurbished_devices': num_of_refurbished_devices,
-            'num_of_scrapped_devices': num_of_scrapped_devices,
-            'average_spendings_per_device': average_spendings_per_device,
-        }
+        # context= {
+        #     'total_spendings': total_spendings,
+        #     'date_of_first_spendings': date_of_first_spendings,
+        #     'num_of_inspected_devices': num_of_inspected_devices,
+        #     'num_of_refurbished_devices': num_of_refurbished_devices,
+        #     'num_of_scrapped_devices': num_of_scrapped_devices,
+        #     'average_spendings_per_device': average_spendings_per_device,
+        # }
+        context={}
         return render(request, 'base/manager/manager_general_statistics.html', context=context)
     else:
         return HttpResponseBadRequest('Not Allowed')
@@ -452,6 +453,14 @@ def manager_statistics_main_page(request):
     if request.user.is_superuser:
         context={}
         return render(request, 'base/manager/manager_statistics.html', context=context)
+    else:
+        return HttpResponseBadRequest('Not Allowed')
+
+@login_required(login_url='login')
+def manager_statistics_graphs(request):
+    if request.user.is_superuser:
+        context={}
+        return render(request, 'base/manager/manager_statistics_graphs.html', context=context)
     else:
         return HttpResponseBadRequest('Not Allowed')
 
