@@ -17,6 +17,7 @@ urlpatterns = [
     path('manager/change-prices/spare-parts/<int:spare_part_id>/', views.manager_change_price_of_spare_part, name='manager-change-price-of-spare-part'),
     path('manager/all-added-devices-list/', views.manager_all_added_devices_list, name="manager-all-added-devices-list"),
     path('manager/general-statistics/', views.manager_general_statistics, name="manager-general-statistics"),
+    path('manager/statistics/graphs', views.manager_statistics_graphs, name='manager-statistics-graphs'),
     path('warehouse/', views.warehouse, name='warehouse'),
     path('warehouse/request-device-refurbishment/', views.request_devices_refurbishments, name='request-device-refurbishment'),
     path('warehouse/request-peripheral-inspection/', views.request_peripheral_inspection, name='request-peripheral-inspection'),
