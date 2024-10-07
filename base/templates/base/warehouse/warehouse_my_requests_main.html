@@ -1,0 +1,26 @@
+{% extends 'base/warehouse/home_warehouse.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block title %}Warehouse - Requests - Main{% endblock %}
+
+{% block main %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h2>My Requests - All</h2>
+</div>
+
+<div class="bg-primary mb-5 mt-3 border border-3 border-primary-subtle fs-4 font-monospace" style="width:fit-content;height:fit-content;">
+    <a href="{% url 'warehouse-device-refurbishment-requests' %}" class="text-white px-3 py-5">Device(s) Refurbishment Requests</a>
+</div >
+
+<div class="bg-primary mb-5 mt-5 border border-3 border-primary-subtle fs-4 font-monospace" style="width:fit-content;height:fit-content;">
+    <a href="{% url 'warehouse-peripheral-inspection-requests' %}" class="text-white px-3 py-5">Peripheral(s) Inspection Requests</a>
+</div >
+
+<div class="bg-primary mb-5 mt-5 border border-3 border-primary-subtle fs-4 font-monospace" style="width:fit-content;height:fit-content;">
+    <a href="{% url 'warehouse-anything-requests' %}" class="text-white px-3 py-5">Anything Requests</a>
+</div >
+
+{% endblock %}

@@ -1,0 +1,214 @@
+{% extends 'base/warehouse/home_warehouse.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block title %}Warehouse - Request Refurbishment{% endblock %}
+
+{% block head %}
+<script type="text/javascript" src="{% static 'base/jQuery/code.jquery.com_jquery-3.7.0.min.js' %}"></script>
+{% endblock %}
+
+{% block main %}
+<div class="mb-5 mt-3">
+    <h1 class="display-5  text-primary">Request Device(s) Refurbishment</h1>
+</div>
+
+<form method="post" action="{% url 'request-device-refurbishment' %}" id="request-device-refurbishment-form"> {% csrf_token %}
+
+    <div class="row">
+        <div class="col">
+          <label for="device-category" class="form-label">Device Categories:</label>
+          <select class="form-select" id="device-category" name="device-category">
+            <option value=""> -- select an option -- </option>
+            {% for category in categories %}
+              <option>{{category}}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col">
+          <label for="oem-brand" class="form-label">OEM Brand:</label>
+          <select class="form-select" id="oem-brand" name="oem-brand">
+            <option value=""> -- select an option -- </option>
+            <option>Apple</option>
+            <option>Others</option>
+          </select>
+        </div>
+        <div class="col">
+          <label for="donor" class="form-label">Donor:</label>
+          <select class="form-select" id="donor" name="donor">
+            <option value=""> -- select an option -- </option>
+            {% for cooperate_donor in cooperate_donors %}
+              <option data-donor-name="{{cooperate_donor.name}}">{{cooperate_donor}}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col">
+          <label class="form-label" for="device-category-quantity">Quantity</label>
+          <input type="number" id="device-category-quantity" name="device-category-quantity" min="1" class="form-control"
+            onkeyup="if(value<1) value=1;">
+        </div>
+        <div class="col">
+          <button type="button" class="btn btn-light focus-ring focus-ring-dark border border-black text-center text-nowrap align-bottom my-4" id="add-device-category-button">Add &#62&#62</button>
+        </div>
+        <!-- TABLE -->
+
+      </div>
+
+      <!-- ROW 2 -->
+      <div class="row justify-content-center mt-5">
+        <div class="col-8">
+          <div class="table-responsive">
+            <table class="table table-striped table-bordered table-hover table-sm text-center">
+              <thead>
+                <tr>
+                  <th scope="col">Device Category</th>
+                  <th scope="col">OEM Brand</th>
+                  <th scope="col">Donor</th>
+                  <th scope="col">Quantity</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody class="table-group-divider" id="table-body-device-refurbishment-requests"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <hr class="mb-5 mt-5">
+
+
+      <div class="form-floating mb-5 mt-3">
+        <textarea class="form-control border border-primary" id="remark" name="remark" placeholder="remarks" style="height: 150px;"></textarea>
+        <label for="remark">Remarks</label>
+      </div>
+
+
+      <div class="mb-3 mt-3">
+        <button type="submit" class="btn btn-primary focus-ring focus-ring-dark btn-lg" id="request-button">Request</button>
+      </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+
+    $(document).ready(function () {
+      let numberOfRowsOfRebubishmentsRequestsTable;
+      numberOfRowsOfRebubishmentsRequestsTable = 0;
+      $("#add-device-category-button").click(function(){
+        if ( $("#device-category").val() != "" && $("#oem-brand").val() != "" && $("#donor").val() != ""  &&  $("#device-category-quantity").val() >= 1 ) {
+          let deviceCategory = $("#device-category").children().filter("option:selected").val();
+          let oemBrand = $("#oem-brand").children().filter("option:selected").val();
+          let donorName = $("#donor").children().filter("option:selected").attr("data-donor-name");
+          let quantity = $("#device-category-quantity").val();
+
+          let tableRowElement = $("<tr>");
+          // id="table-row-requrbishment-request-1"
+          tableRowElement.attr("id", `table-row-requrbishment-request-${numberOfRowsOfRebubishmentsRequestsTable + 1}`);
+          // Device Category
+          let tableDataElement_deviceCategory = $("<td>");
+          let inputElement_deviceCategory = $("<input>");
+          inputElement_deviceCategory.addClass("form-control bg-transparent border-0 text-center");
+          inputElement_deviceCategory.attr("type", "text");
+          inputElement_deviceCategory.val(deviceCategory);
+          inputElement_deviceCategory.attr("id", `device-category-added-name-${numberOfRowsOfRebubishmentsRequestsTable + 1}`);
+          inputElement_deviceCategory.attr("name", `device-category-added-name-${numberOfRowsOfRebubishmentsRequestsTable + 1}`);
+          inputElement_deviceCategory.attr("required", "");
+          inputElement_deviceCategory.attr("readonly", "");
+          tableDataElement_deviceCategory.append(inputElement_deviceCategory);
+          // OEM-Brand
+          let tableDataElement_oemBrand = $("<td>");
+          let inputElement_oemBrand = $("<input>");
+          inputElement_oemBrand.addClass("form-control bg-transparent border-0 text-center");
+          inputElement_oemBrand.attr("type", "text");
+          inputElement_oemBrand.val(oemBrand);
+          inputElement_oemBrand.attr("id", `oem-brand-added-name-${numberOfRowsOfRebubishmentsRequestsTable + 1}`);
+          inputElement_oemBrand.attr("name", `oem-brand-added-name-${numberOfRowsOfRebubishmentsRequestsTable + 1}`);
+          inputElement_oemBrand.attr("required", "");
+          inputElement_oemBrand.attr("readonly", "");
+          tableDataElement_oemBrand.append(inputElement_oemBrand);
+          // Donor
+          let tableDataElement_donorName = $("<td>");
+          let inputElement_donorName = $("<input>");
+          inputElement_donorName.addClass("form-control bg-transparent border-0 text-center");
+          inputElement_donorName.attr("type", "text");
+          inputElement_donorName.attr("value", `${donorName}`);
+          inputElement_donorName.attr("id", `donor-added-name-${numberOfRowsOfRebubishmentsRequestsTable + 1}`);
+          inputElement_donorName.attr("name", `donor-added-name-${numberOfRowsOfRebubishmentsRequestsTable + 1}`);
+          inputElement_donorName.attr("required", "");
+          inputElement_donorName.attr("readonly", "");
+          tableDataElement_donorName.append(inputElement_donorName);
+          // Quantity
+          let tableDataElement_deviceCategoryQuantity = $("<td>");
+          let inputElement_deviceCategoryQuatity = $("<input>");
+          inputElement_deviceCategoryQuatity.addClass("form-control bg-transparent border-0 text-center");
+          inputElement_deviceCategoryQuatity.attr("type", "text");
+          inputElement_deviceCategoryQuatity.val(quantity);
+          inputElement_deviceCategoryQuatity.attr("id", `quantity-added-${numberOfRowsOfRebubishmentsRequestsTable + 1}`);
+          inputElement_deviceCategoryQuatity.attr("name", `quantity-added-${numberOfRowsOfRebubishmentsRequestsTable + 1}`);
+          inputElement_deviceCategoryQuatity.attr("required", "");
+          inputElement_deviceCategoryQuatity.attr("readonly", "");
+          tableDataElement_deviceCategoryQuantity.append(inputElement_deviceCategoryQuatity);
+          // Create Delete Button
+          let tableDataElement_deleteButton = $("<td>");
+          let buttonElement_deleteButton = $("<button>").text("Delete");
+          buttonElement_deleteButton.attr("type", "button");
+          buttonElement_deleteButton.addClass("btn btn-danger delete-button btn-sm");
+          tableDataElement_deleteButton.append(buttonElement_deleteButton);
+
+
+          // Append To Table Row
+          tableRowElement.append(tableDataElement_deviceCategory);
+          tableRowElement.append(tableDataElement_oemBrand);
+          tableRowElement.append(tableDataElement_donorName);
+          tableRowElement.append(tableDataElement_deviceCategoryQuantity);
+          tableRowElement.append(tableDataElement_deleteButton);
+          // Append To Table Body
+          $("#table-body-device-refurbishment-requests").append(tableRowElement);
+
+          numberOfRowsOfRebubishmentsRequestsTable++;
+        }
+      });
+
+      // Deleting ROWS FUNCTINALLITY
+      $('body').on('click', '.delete-button', function (e){
+        let rowTableOfPart = $(this).parent().parent();
+        rowTableOfPart.remove();
+        numberOfRowsOfRebubishmentsRequestsTable--;
+        
+        // change ids
+        let rowsOfTableBody = $("#table-body-device-refurbishment-requests").children();
+
+        for (let i=0; i < rowsOfTableBody.length; i++) {
+          console.log(rowsOfTableBody[i]);
+          $(rowsOfTableBody[i]).attr("id", `table-row-requrbishment-request-${i+1}`);     // <tr>-s
+          
+          let tableDatasOfRow = $(rowsOfTableBody[i]).children();
+          // Change spare part name of item
+          let tableData_deviceCategory = $(tableDatasOfRow[0]).children()[0];       // Part Name
+          $(tableData_deviceCategory).attr("id", `device-category-added-name-${i+1}`); 
+          let tableData_oemBrand = $(tableDatasOfRow[1]).children()[0];           // Serial Number
+          $(tableData_oemBrand).attr("id", `oem-brand-added-name-${i+1}`); 
+          let tableData_donorName = $(tableDatasOfRow[2]).children()[0];
+          $(tableData_donorName).attr("id", `donor-added-name-${i+1}`);
+          let tableData_quantity = $(tableDatasOfRow[3]).children()[0];
+          $(tableData_quantity).attr("id", `quantity-added-${i+1}`);
+
+        }
+      });
+
+      $("#request-device-refurbishment-form").submit(function(e) {
+        if ($("#table-body-device-refurbishment-requests").children().length >= 1) {
+
+        } else {
+          alert("You must add device categories in the table");
+          e.preventDefault();
+        }
+      });
+
+    });
+
+  </script>
+{% endblock %}

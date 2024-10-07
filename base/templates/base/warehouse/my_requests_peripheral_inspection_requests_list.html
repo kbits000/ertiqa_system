@@ -1,0 +1,93 @@
+{% extends 'base/warehouse/home_warehouse.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block title %}Warehouse - Peripheral(s) Inspection Requests List{% endblock %}
+
+{% block main %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h2>My Requests</h2>
+</div>
+
+<div class="mb-5 mt-4">
+    <h1 class="fs-3">Requests of Peripheral(s) Inspections</h1>
+</div>
+
+
+<form method="GET" action="#">
+    <div class="mb-3 mt-5 input-group">
+      <input type="search" class="form-control form-control-lg" id="search-bar" placeholder="Search"name="q">
+      <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+</form>
+
+<div class="table-responsive">
+    <table class="table table-hover mt-5 text-center">
+      <thead>
+        <tr class="table-primary">
+          <th scope="col" class="fs-5 fw-bold">#</th>
+          <th scope="col" class="fs-5 fw-bold">#id</th>
+          <th scope="col" class="fs-5 fw-bold">Creation Date</th>
+          <th scope="col" class="fw-bold">Receive Date</th>
+          <th scope="col" class="fw-bold">Updated</th>
+          <th scope="col" class="fw-bold">Remark</th>
+          <th scope="col" class="fw-bold">Status</th>
+        </tr>
+      </thead>
+      <tbody class="table-group-divider">
+        {% for singleRequest in user_requests %}
+          <tr>
+            <td class="fs-5 fw-bold">{{forloop.counter}}</td>
+            <td><a href="{% url 'warehouse-peripheral-inspection-request-details' singleRequest.id %}" class="fs-5 fw-bold">{{ singleRequest.id }}</a></td>
+            <td>{{ singleRequest.created|date:"l, d M, Y" }}</td>
+            {% if singleRequest.receive_date is None %}
+              <td>No Receive Date Yet</td>
+            {% else %}
+              <td>{{singleRequest.receive_date}}</td>
+            {% endif %}
+
+            {% if singleRequest.is_updated == False %}
+              <td>No</td>
+            {% else %}
+              <td>Yes</td>
+            {% endif %}
+
+            <td>{{ singleRequest.remark|truncatechars:35 }}</td>
+
+            {% if singleRequest.status == "Pending" %}
+              <td class='text-white fw-bold' style="background-color:#ffc107;">Pending</td>
+            {% elif singleRequest.status == "Accepted" %}
+              <td class='text-white fw-bold' style="background-color:green;opacity: 0.7;">Accepted</td>
+            {% elif singleRequest.status == "Rejected" %}
+              <td class='text-white fw-bold' style="background-color:red;">Rejected</td>
+            {% elif singleRequest.status == "Canceled" %}
+              <td class='text-white fw-bold' style="background-color:#7f7f7f;">Cenceled</td>
+            {% endif %}
+
+          </tr>
+
+        {% endfor %}
+
+
+      </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  $(document).ready(function () {
+    var rows = document.getElementsByTagName('table')[0].rows;
+    Array.from(rows).forEach(row => {
+      row.addEventListener("click", function () {
+        console.log(this.getAttribute('data-href'));
+        window.location.href = this.getAttribute('data-href');
+      });
+    });
+
+
+  });
+</script>
+{% endblock %}

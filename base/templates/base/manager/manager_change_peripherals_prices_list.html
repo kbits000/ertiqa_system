@@ -1,0 +1,77 @@
+{% extends 'base/manager/home_manager.html' %}
+
+{% load static %}
+
+{% block navbar_title_url %}{% url 'manager' %}{% endblock %}
+
+{% block title %}Manager - Change Peripherals Prices{% endblock %}
+
+{% block main %}
+
+{% include "base/messages.html" %}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Change Peripherals Price</h1>
+</div>
+
+<div class="table-responsive mt-5 mb-5">
+    <table class="table table-striped text-center">
+        <thead>
+            <th>#</th>
+            <th>Name</th>
+            <th>Serial Number</th>
+            <th>Description</th>
+            <th>Current Price</th>
+            <th></th>
+        </thead>
+        <tbody>
+            {% for peripherlal_with_price in peripherals_with_their_current_prices %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{peripherlal_with_price.peripheral.name}}</td>
+                    <td>{{peripherlal_with_price.peripheral.serial_number}}</td>
+                    <td>{{peripherlal_with_price.peripheral.remark}}</td>
+                    {% if peripherlal_with_price.price is None %}
+                        <td>No Price has been set</td>
+                    {% else %}
+                        <td>{{peripherlal_with_price.price|floatformat:3}} SAR</td>
+                    {% endif %}
+                    <td><button type="button" class="btn btn-warning"><a href="{% url 'manager-change-price-of-peripheral' peripherlal_with_price.peripheral.id %}">Change</a></button></td>
+                </tr>
+            {% endfor %}
+
+            <tr>
+                <td>1</td>
+                <td>Mouse</td>
+                <td>6110</td>
+                <td>DDD</td>
+                <td>95 SAR</td>
+                <td>
+                    <button type="button" class="btn btn-warning">
+                        <form method="POST" , action="#">
+                            
+                        </form>
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Keyboard</td>
+                <td>6111</td>
+                <td>DDD</td>
+                <td>44 SAR</td>
+                <td><button type="button" class="btn btn-warning"><a href="#">Change</a></button></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Speaker</td>
+                <td>6112</td>
+                <td>DDD</td>
+                <td>55 SAR</td>
+                <td><button type="button" class="btn btn-warning"><a href="#">Change</a></button></td>
+            </tr>
+            
+        </tbody>
+    </table>
+</div>
+{% endblock %}

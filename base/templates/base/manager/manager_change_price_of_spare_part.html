@@ -1,0 +1,62 @@
+{% extends 'base/manager/home_manager.html' %}
+
+{% load static %}
+
+{% block navbar_title_url %}{% url 'manager' %}{% endblock %}
+
+{% block title %}Manager - {{spare_part.name}} (SN: {{spare_part.serial_number}}) Price{% endblock %}
+
+{% block main %}
+
+{% include "base/messages.html" %}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Change {{spare_part.name}} Price</h1>
+</div>
+
+<form method="POST" action="" id ="change-spare-part-price-form"> {% csrf_token %}
+    <div class="mt-4 mb-5">
+        {% if spare_part_current_price is None %}
+            <h3 class='display-6 d-inline ms-3'>Current Peripheral (Name: SN:): No Price</h3>
+        {% else %}
+            <h3 class='display-6 d-inline ms-3'>Current {{spare_part.name}} (SN:{{spare_part.serial_number}}) Price: <p class="d-inline fw-bold">{{spare_part_current_price}} SAR</p></h3>
+        {% endif %}
+    </div>
+
+
+    <div class="row mt-5">
+        <div class="col-5 pt-5">
+            <h3 class='display-6 d-inline ' style="max-width:60%:">New {{spare_part.name}} Price: </h3>
+        </div>
+        <div class="col-2">
+            <div class="d-flex flex-column " style="width:60%;">
+                <label class="form-label fs-3" for="new-spare-part-price">Price</label>
+                <input type="text" id="new-spare-part-price" name="new-spare-part-price" class="form-control">
+            </div>
+        </div>
+        <div class="col-2 pt-5">
+            <button type="submit" class="btn btn-warning">Change Price</button>
+        </div>
+    </div>
+
+
+</form>
+
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        $("#change-spare-part-price-form").on( "submit", function( event ) {
+            if ($.isNumeric($("#new-spare-part-price").val() ) != true) {
+                alert("Please enter a number");
+                event.preventDefault();
+                return null
+            } else {
+
+            }
+        });
+    });
+</script>
+{% endblock %}

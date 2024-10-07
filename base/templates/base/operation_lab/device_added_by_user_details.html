@@ -1,0 +1,279 @@
+{% extends 'base/operation_lab/home_operation_lab.html' %}
+
+{% block title %}Operation Lab - Device Details{% endblock %}
+
+{% block main %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h2 class="display-6">Device (Barcode: {{device_details.barcode}}) Details</h2>
+</div>
+
+<dl class="row">
+    <div class="col text-start">
+        <dt class="d-inline fs-4 fw-bold lead">Barcode: </dt>
+        <dd class="d-inline fs-4 lead">{{device_details.barcode}}</dd>
+
+        {% if device_details.serial_number == '' or device_details.serial_number == None %}
+        <br>
+        <dt class="d-inline fs-4 fw-bold lead">Serial Number: </dt>
+        <dd class="d-inline fs-4 lead">No Serial Number Entered</dd>
+        {% else %}
+        <br>
+        <dt class="d-inline fs-4 fw-bold lead">Serial Number: </dt>
+        <dd class="d-inline fs-4 lead">{{device_details.serial_number}}</dd>
+        {% endif %}
+
+        {% if device_details.individual_donor_flag == True %}
+        <br>
+        <dt class="d-inline fs-4 fw-bold lead">Donor: </dt>
+        <dd class="d-inline fs-4 lead">Individual Person</dd>
+        {% else %}
+        <br>
+        <dt class="d-inline fs-4 fw-bold lead">Donor: </dt>
+        <dd class="d-inline fs-4 lead">{{device_details.corporate_donor.name}}</dd>
+        {% endif %}
+
+        <br>
+        <dt class="d-inline fs-4 fw-bold lead">Category: </dt>
+        <dd class="d-inline fs-4 lead">{{device_details.category.name}}</dd>
+        <br>
+        <dt class="d-inline fs-4 fw-bold lead">OEM Brand: </dt>
+        <dd class="d-inline fs-4 lead">{{device_details.oem_brand.name}}</dd>
+        <br>
+        <dt class="d-inline fs-4 fw-bold lead">Operating System: </dt>
+        <dd class="d-inline fs-4 lead">{{device_details.operating_system|capfirst}}</dd>
+
+        {% if device_details.processor == '' or device_details.processor == None %}
+        <br>
+        <dt class="d-inline fs-4 fw-bold lead">Processor: </dt>
+        <dd class="d-inline fs-4 lead">No Processor Entered</dd>
+        {% else %}
+        <br>
+        <dt class="d-inline fs-4 fw-bold lead">Processor: </dt>
+        <dd class="d-inline fs-4 lead">{{device_details.processor.name}}</dd>
+        {% endif %}
+
+        {% if device_details.status == 'scrapped' %}
+        <br>
+        <dt class="d-inline fs-4 fw-bold lead">Status: </dt>
+        <dd class="d-inline fs-4 lead">Scrap</dd>
+        {% elif device_details.status == 'refurbished' %}
+        <br>
+        <dt class="d-inline fs-4 fw-bold lead">Status: </dt>
+        <dd class="d-inline fs-4 lead">Refurbished/Ready</dd>
+        {% endif %}
+
+    </div>
+    <div class="col text-start">
+        {% if device_details.display_size == '' or device_details.display_size is None %}
+        {% else %}
+            <dt class="d-inline fs-4 fw-bold lead">Display Size: </dt>
+            <dd class="d-inline fs-4 lead">{{device_details.display_size}}</dd>
+        {% endif %}
+
+        {% if device_details.ram_size == '' or device_details.ram_size is None %}
+        {% else %}
+            <dt class="d-inline fs-4 fw-bold lead">RAM Size: </dt>
+            <dd class="d-inline fs-4 lead">{{device_details.ram_size}}</dd>
+        {% endif %}
+
+        {% if device_details.gpu == '' or device_details.gpu is None %}
+        {% else %}
+            <dt class="d-inline fs-4 fw-bold lead">GPU: </dt>
+            <dd class="d-inline fs-4 lead">{{device_details.gpu}}</dd>
+        {% endif %}
+
+    </div>
+</dl>
+
+{% if installed_windows_details != None %}
+<hr>
+
+<div class="row">
+    <div class="col text-start">
+        <h3 class="display-5 mb-4 text-center">Installed Windows Details</h3>
+
+        <div class="mt-2 mb-2 d-inline-block px-3">
+            <dt class="d-inline fs-4 fw-bold lead">Report Name: </dt>
+            <dd class="d-inline fs-4 lead">{{installed_windows_details.report_name}}</dd>
+        </div>
+        <br>
+        <div class="mt-2 mb-2 d-inline-block px-3">
+            <dt class="d-inline fs-4 fw-bold lead">MAR Name: </dt>
+            <dd class="d-inline fs-4 lead">{{installed_windows_details.mar_name}}</dd>
+        </div>
+
+        <br>
+        <div class="mt-2 mb-2 d-inline-block px-3">
+            <dt class="d-inline fs-4  fw-boldlead">Product Installed (Name): </dt>
+            <dd class="d-inline fs-4 lead">{{installed_windows_details.name}}</dd>
+        </div>
+
+        <br>
+        <div class="mt-2 mb-2 d-inline-block px-3">
+            <dt class="d-inline fs-4 fw-bold lead">MAR COA SN (Product Key): </dt>
+            <dd class="d-inline fs-4 lead">{{installed_windows_details.product_key_id}}</dd>
+        </div>
+
+        <br>
+        <div class="mt-2 mb-2 d-inline-block px-3">
+            <dt class="d-inline fs-4 fw-bold lead">Installation Date: </dt>
+            <dd class="d-inline fs-4 lead">{{ installed_windows_details.installation_date|date:"Y-M-d"}}</dd>
+        </div>
+
+
+    </div>
+</div>
+{% endif %}
+
+<div class="mt-4 border border-dark-subtle border-3"></div>
+
+<div class="row mt-5">
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <th class='text-center'>#</th>
+                <th scope="col">Item/Part</th>
+                <th scope="col">Description</th>
+                <th scope="col" class="text-start">Unit Price</th>
+                <th scope="col" class="text-center">Quantity</th>
+                <th scope="col" class="text-start">Totals</th>
+            </thead>
+            <tbody>
+
+            {% if installed_windows_details != None %}
+            <tr>
+                <td class='text-center row-order'></td>
+                <td class="left">Windows</td>
+                <td class="left">Windows That Is Installed</td>
+                <td class="right">{{windows_price|floatformat:3}} SAR</td>
+                <td class="text-center">1</td>
+                <td class="right">{{windows_price|floatformat:3}} SAR</td>
+            </tr>
+                {% for peripheral_related_details in device_with_peripheral_total_spending %}
+                <tr>
+                    <td class='text-center row-order'></td>
+                    <td class="left">{{peripheral_related_details.peripheral_details_obj.peripheral.name}}</td>
+                    <td class="left">{{peripheral_related_details.peripheral_details_obj.peripheral.remark}}</td>
+                    {% if peripheral_related_details.peripheral_details_obj.is_bought == True %}
+                    <td class="right">{{peripheral_related_details.peripheral_details_obj.price.price|floatformat:3}} SAR
+                    </td>
+                    {% else %}
+                    <td class="right">0.000 SAR</td>
+                    {% endif %}
+                    <td class="text-center">{{peripheral_related_details.peripheral_details_obj.quantity}}</td>
+                    <td class="right">{{peripheral_related_details.total_spending|floatformat:3}} SAR</td>
+                </tr>
+                {% endfor %}
+
+                {% for spare_part_related_details in spare_parts_with_total_spending %}
+                    <tr>
+                        <td class='text-center row-order'></td>
+                        <td class="left">{{spare_part_related_details.spare_part_details_obj.spare_part.name}}</td>
+                        <td class="left">{{spare_part_related_details.spare_part_details_obj.spare_part.remark}}</td>
+                        {% if spare_part_related_details.spare_part_details_obj.is_bought == True %}
+                        <td class="right">{{spare_part_related_details.spare_part_details_obj.price.price|floatformat:3}} SAR
+                        </td>
+                        {% else %}
+                        <td class="right">0.000 SAR</td>
+                        {% endif %}
+                        <td class="text-center">{{spare_part_related_details.spare_part_details_obj.quantity}}</td>
+                        <td class="right">{{spare_part_related_details.total_spending|floatformat:3}} SAR</td>
+                    </tr>
+                {% endfor %}
+
+                {% for single_software_details in software_with_total_spending %}
+                    <tr>
+                        <td class='text-center row-order'></td>
+                        <td class="left">{{single_software_details.software_details_obj.software.name}}</td>
+                        <td class="left">{{single_software_details.software_details_obj.software.remark}}</td>
+                        {% if single_software_details.software_details_obj.is_bought %}
+                            <td class="right">{{single_software_details.software_details_obj.price.price|floatformat:3}} SAR
+                        {% else %}
+                            <td class="right">0.000 SAR</td>
+                        {% endif %}
+                        <td class="text-center">1</td>
+                        <td class="right">{{spare_part_related_details.total_spending|floatformat:3}} SAR</td>
+                    </tr>
+                {% endfor %}
+
+            {% else %}
+                    
+                {% for peripheral_related_details in device_with_peripheral_total_spending %}
+                <tr>
+                    <td class='text-center row-order'></td>
+                    <td class="left">{{peripheral_related_details.peripheral_details_obj.peripheral.name}}</td>
+                    <td class="left">{{peripheral_related_details.peripheral_details_obj.peripheral.remark}}</td>
+                    {% if peripheral_related_details.peripheral_details_obj.is_bought == True %}
+                    <td class="right">{{peripheral_related_details.peripheral_details_obj.price.price|floatformat:3}} SAR
+                    </td>
+                    {% else %}
+                    <td class="right">0.000 SAR</td>
+                    {% endif %}
+                    <td class="text-center">{{peripheral_related_details.peripheral_details_obj.quantity}}</td>
+                    <td class="right">{{peripheral_related_details.total_spending|floatformat:3}} SAR</td>
+                </tr>
+                {% endfor %}
+
+                {% for spare_part_related_details in spare_parts_with_total_spending %}
+                    <tr>
+                        <td class='text-center row-order'></td>
+                        <td class="left">{{spare_part_related_details.spare_part_details_obj.spare_part.name}}</td>
+                        <td class="left">{{spare_part_related_details.spare_part_details_obj.spare_part.remark}}</td>
+                        {% if spare_part_related_details.spare_part_details_obj.is_bought == True %}
+                        <td class="right">{{spare_part_related_details.spare_part_details_obj.price.price|floatformat:3}} SAR
+                        </td>
+                        {% else %}
+                        <td class="right">0.000 SAR</td>
+                        {% endif %}
+                        <td class="text-center">{{spare_part_related_details.spare_part_details_obj.quantity}}</td>
+                        <td class="right">{{spare_part_related_details.total_spending|floatformat:3}} SAR</td>
+                    </tr>
+                {% endfor %}
+
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row mb-5 justify-content-end">
+    <div class="col-5">
+        <hr class="border border-dark-subtle">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td class="left"><strong>Total</strong></td>
+                    <td class="right"><strong>{{total_spendings_on_device|floatformat:3}} SAR</strong></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class='mt-3 mb-5'>
+    <form method="POST" action="#"> {% csrf_token %}
+        <div class="form-check mb-3 mt-5" style="padding-left: 30px;">
+            <input type="checkbox" class="form-check-input fs-6" id="request-correction" value="">
+            <label class="form-check-label fs-6" for="request-correction">Are you sure you want to request a correction for the deatils of this device?</label>
+        </div>
+        
+        <div class="mb-5 mt-3">
+            <button type="Submit" class="btn btn-danger btn-sm" id="request-correction">Request Device Details Correction</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+
+<script>
+    $(document).ready(function() {
+        console.log($(".row-order"));
+        for (let i=0; i < $(".row-order").length; i++) {
+            $(".row-order")[i].innerHTML = i+1;
+        }
+    });
+</script>
+
+{% endblock %}

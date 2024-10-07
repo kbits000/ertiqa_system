@@ -1,0 +1,101 @@
+{% extends 'base/operation_lab/home_operation_lab.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block title %}Operation Lab - Anything Request - Request #{{request_details.id}}{% endblock %}
+
+{% block main%}
+<!-- MAIN -->
+<div
+    class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h2>Anything Request Details - Request #{{request_details.id}}</h2>
+</div>
+
+
+<div class="row" style="margin-top: 40px;">
+    <div class="col">
+        <div class="fs-4 text-center">#id</div>
+        <div class="fs-4 text-center border border-2 rounded-5 border-dark-subtle bg-secondary-subtle w-50 mx-auto">{{request_details.id}}</div>
+    </div>
+    <div class="col">
+        <div class="fs-4 text-center">Status</div>
+        {% if request_details.status == "Pending" %}
+            <div class="fs-4 text-center border border-2 rounded-5 border-warning-subtle bg-opacity-9 w-50 mx-auto fw-bold text-white" style="background-color:#ffc107;">Pending</div>
+        {% elif request_details.status == "Accepted" %}
+            <div class="fs-4 text-center border border-2 rounded-5 border-danger-subtle bg-danger bg-opacity-9 w-50 mx-auto fw-bold text-white" style="background-color:green;opacity: 0.7;">Accepted</div>
+        {% elif request_details.status == "Rejected" %}
+            <div class="fs-4 text-center border border-2 rounded-5 border-danger-subtle bg-danger bg-opacity-9 w-50 mx-auto fw-bold text-white">Rejected</div>
+        {% elif request_details.status == "Canceled" %}
+            <div class="fs-4 text-center border border-2 rounded-5 border-danger-subtle bg-opacity-9 w-50 mx-auto fw-bold text-white" style="background-color:#7f7f7f;">Canceled</div>
+        {% endif %}
+
+    </div>
+    <div class="col">
+        <div class="fs-4 text-center">Creation Date</div>
+        <div class="fs-4 text-center border border-2 rounded-5 border-dark-subtle bg-secondary-subtle w-50 mx-auto">{{ request_details.created|date:"l, d M, Y" }}</div>
+    </div>
+    <div class="col">
+        <div class="fs-4 text-center">Updated</div>
+        {% if request_details.is_updated %}
+            <div class="fs-4 text-center border border-2 rounded-5 border-dark-subtle bg-secondary-subtle w-50 mx-auto">Yes</div>
+        {% else %}
+            <div class="fs-4 text-center border border-2 rounded-5 border-dark-subtle bg-secondary-subtle w-50 mx-auto">No</div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="mb-3 mt-5">
+    <label class="fs-3 font-monospace">Remark:</label>
+    <p class="mb-3 mt-3 px-3 py-3 border border-4 border-dark-subtle text-start fs-5 font-monospace"
+        id="remark">
+        {{request_details.remark}}
+    </p>
+</div>
+
+<div class="mb-3 mt-5">
+    <label class="fs-3 font-monospace">Response:</label>
+    <p class="mb-3 mt-3 px-3 py-3 border border-4 border-dark-subtle text-start fs-5 font-monospace"
+        id="remark">
+        {% if request_details.remark_response == '' %}
+            No Response Yet
+        {% else %}
+            {{request_details.remark_response}}
+        {% endif %}
+    </p>
+</div>
+
+{% if request_details.status == "Canceled" %}
+
+{% else %}
+<form method="POST" action="{% url 'opeation-lab-anything-request-details' request_id=request_details.id %}"> {% csrf_token %}
+    <div class="form-check mb-5 mt-5" style="padding-left: 50px;">
+        <input type="checkbox" class="form-check-input fs-5" id="cancel-approve" value="">
+        <label class="form-check-label fs-5" for="cancel-approve">Are you sure you want to cancel this request? This action cannot be redone.</label>
+    </div>
+    
+    <div class="mb-5 mt-3">
+        <button type="Submit" class="btn btn-danger btn-lg" id="cancel-button">Cancel this request</button>
+    </div>
+</form>
+{% endif %}
+
+
+{% endblock %}
+
+
+{% block scripts %}
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#cancel-button").on("submit", function(e) {
+            if ($("#cancel-approve").is(":checked");) {
+
+            } else {
+                alert("You must check cancelling box first");
+                e.preventDefault();
+            }
+          });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends 'base/manager/home_manager.html' %}
+{% load static %}
+
+{% block title %}Manager - General Statistics{% endblock %}
+
+{% block main %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Dashboard - General Statistics</h1>
+</div>
+
+<div class="row">
+    <div class="col-9">
+
+        <p class="font-monospace fs-3 text-center mb-4">Statistics Since <b>{{date_of_first_spendings|date:"F j, Y - g:i a"}}</b></p>
+
+        <p class='font-monospace fs-4'>Total Number of Inspected Devices: {{num_of_inspected_devices}}</p>
+        <ul>
+            <li class='font-monospace fs-5'>Total Number of Refurbished Devices: {{num_of_refurbished_devices}}</li>
+            <li class='font-monospace fs-5'>Total Number of Scrapped Devices: {{num_of_scrapped_devices}}</li>
+        </ul>
+        <p class='font-monospace fs-4'>Total Spendings Since <b>{{date_of_first_spendings|date:"F j, Y - g:i a"}}</b>:
+            {{total_spendings|floatformat:3}} SAR</p>
+        <p class="font-monospace fs-4">Average Spendings Per <b>Device</b>: {{average_spendings_per_device}} SAR</p>
+        <p class='font-monospace fs-4'>Average Spendings Per <b>Day</b>: </p>
+        <p class='font-monospace fs-4'>Average Spendings Per <b>month</b>: </p>
+    </div>
+
+    <div class="col-3">
+        <div class="card">
+            <article class="card-group-item">
+                <header class="card-header">
+                    <h6 class="title">Date</h6>
+                </header>
+                <div class="filter-content">
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-6 mb-1">
+                                <label>Start</label>
+                                <input type="number" class="form-control" id="inputEmail4" placeholder="2015-01-01">
+                            </div>
+                            <div class="form-group col-md-6 text-right">
+                                <label>End</label>
+                                <input type="number" class="form-control" placeholder="2030-01-01">
+                            </div>
+                        </div>
+                    </div> <!-- card-body.// -->
+                </div>
+            </article> <!-- card-group-item.// -->
+            <div class="card-footer ">
+                <button type="button" class="btn bg-primary text-white">Search</button>
+            </div>
+
+        </div> <!-- card.// -->
+    </div>
+
+</div>
+
+{% endblock %}

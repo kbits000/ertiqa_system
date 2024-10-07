@@ -1,0 +1,199 @@
+{% extends 'base/manager/home_manager.html' %}
+{% load static %}
+
+{% block head %}
+<script src="{% static 'base/scripts/home/cdn.jsdelivr.net_npm_chart.js@4.3.3_dist_chart.umd.min.js' %}" ></script>
+<script src="{% static 'base/scripts/home/cdn.jsdelivr.net_npm_chartjs-plugin-datalabels@2.2.0_dist_chartjs-plugin-datalabels.min.js' %}" ></script>
+{% endblock %}
+
+{% block charts_list %}
+<div>
+  <select class="form-select" id="chart-options">
+    <option value="">-------------------</option>
+    <option id="option-percentage-of-number-of-devices-inspected-per-user" value="option-1">Precentage and Number of Inspected Devices Per User</option>
+    <option value="option-2" selected>Precentage and Number of Inspected Devices, Refurbished and Scrapped, Per User</option>
+    <option value="option-3">Precentage and Number of Inspected Devices, Refurbished and Scrapped, in Months in a Year</option>
+    <option value="option-4">Precentage and Number of Inspected Devices, Refurbished and Scrapped, in Years</option>
+  </select>
+</div>
+{% endblock %}
+
+
+{% block chart2 %}
+
+<div id="chart-container-2" class="container mb-5 chart-container-canvas" style="max-width: 85%;">
+  <div class="d-flex flex-row mb-5">
+    <div class="me-3">
+      <label for="year-selected" class="form-label pe-2">Year:</label>
+      <select class="form-select" id="year-selected" name="year-selected">
+        {% comment %} <option value="">------------------------</option> {% endcomment %}
+        <option value="all-years" selected>All Years</option>
+        <option>2014</option>
+        <option>2015</option>
+        <option>2016</option>
+        <option>2017</option>
+        <option>2018</option>
+        <option>2019</option>
+        <option>2020</option>
+        <option>2021</option>
+        <option>2022</option>
+        <option>2023</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="month-selected" class="form-label pe-2">Month:</label>
+      <select class="form-select" id="month-selected" name="month-selected">
+        <option value="" selected>All Months</option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+        <option>6</option>
+        <option>7</option>
+        <option>8</option>
+        <option>9</option>
+        <option>10</option>
+        <option>11</option>
+        <option>12</option>
+      </select>
+    </div>
+  </div>
+  
+  <canvas id="chart-2"></canvas>
+</div>
+
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+
+  $(document).ready(function () {
+    let filterParameters;
+    filterParameters = new URLSearchParams(window.location.search)
+
+    if (filterParameters.has('year')) {
+      let year;
+      year = filterParameters.get('year');
+      if (year == 'all') {
+        $($("#year-selected").children()[0]).attr('selected', '');
+      } else {
+        for (let i=0; i < $("#year-selected").children().length; i++) {
+          if ($($("#year-selected").children()[i]).val() == year) {
+            $($("#year-selected").children()[i]).attr('selected', '');
+          }
+        }
+      }
+    }
+
+    $("#chart-options").change(function() {
+      let selectedOptionId;
+      selectedOptionId = $("#chart-options").val()
+      if ( selectedOptionId == '' ) {
+        location.href = "{% url 'manager' %}";
+      } else if ( selectedOptionId == 'option-1' ) {
+
+      } else if ( selectedOptionId == 'option-2' ) {
+        location.href = "{% url 'manager' %}charts/chart-2/?year=all";
+        $(".chart-container-canvas").hide();
+        $("#chart-container-2").show();
+      } else if (selectedOptionId == 'option-3') {
+
+      } else if (selectedOptionId == 'option-4') {
+
+      } else if ($("#chart-options").val() == "") {
+
+      }
+    });
+
+    $("#year-selected").change(function() {
+      let year;
+      year = $("#year-selected").val();
+      if ($("#year-selected").val() == 'all-years') {
+        location.href = "{% url 'manager' %}charts/chart-2/?year=all";
+      } else {
+        location.href = `{% url 'manager' %}charts/chart-2/?year=${year}`;
+      }
+    });
+
+    $("#month-selected").change(function() {
+      let year;
+      year = $("#year-selected").val();
+      let month;
+      month = $("#month-selected").val();
+      if (month != '' && year == 'all') {
+        alert('aaa');
+      }
+    });
+
+    usernameWithNumberOfRefurbishedAndScrappedDevices = [
+    {% for user_scrapped_refurbished in username_numOfScrappedAndRefurbished %}
+      { name: '{{user_scrapped_refurbished.username.first_name}} {{user_scrapped_refurbished.username.last_name}}', numberOfScrappedDevices: {{user_scrapped_refurbished.scrapped}}, numberOfRefurbishedDevices: {{user_scrapped_refurbished.refurbished}} },
+    {% endfor %}
+    ];
+
+    {% comment %} $("#chart-container-2").show(); {% endcomment %}
+    
+    totalNumberOfInspectedDevicesGlobal = 0
+    for (let i=0; i<usernameWithNumberOfRefurbishedAndScrappedDevices.length; i++) {
+      totalNumberOfInspectedDevicesGlobal = totalNumberOfInspectedDevicesGlobal + usernameWithNumberOfRefurbishedAndScrappedDevices[i].numberOfScrappedDevices + usernameWithNumberOfRefurbishedAndScrappedDevices[i].numberOfRefurbishedDevices;
+    }
+
+    let topLabels_chart_2 = {
+      id: 'topLabels_chart_2',
+      afterDatasetsDraw(chart, args, pluginOption) {
+  
+      }
+    };
+  
+  
+    let chart_2 = new Chart($("#chart-2"), {
+      type: 'bar',
+      data: {
+        labels: usernameWithNumberOfRefurbishedAndScrappedDevices.map(row => row.name),
+        datasets: [{
+          label: 'Number and Percentae of Scrapped Devices Per User',
+          data: usernameWithNumberOfRefurbishedAndScrappedDevices.map(row => row.numberOfScrappedDevices),
+          borderWidth: 1,
+        },
+        {
+          label: 'Number and Percentae of Refubished Devices Per User',
+          data: usernameWithNumberOfRefurbishedAndScrappedDevices.map(row => row.numberOfRefurbishedDevices),
+          borderWidth: 1,
+        }]
+      },
+      options: {
+        scales: {
+          x: {
+            stacked: true
+          },
+          y: {
+            stacked: true
+          }
+        },
+        plugins: {
+          datalabels: {
+            font: {
+              size: 10
+            },
+            textAlign: 'center',
+            formatter: (value, context) => {
+              let percentageOfDevices = (value / totalNumberOfInspectedDevicesGlobal * 100).toFixed(1);
+              let display;
+              if (value == '0') {
+                return null;
+              }
+              display = [`#${value}`, `${percentageOfDevices}%`, `User: ${context.chart.config._config.data.labels[context.dataIndex]}`];
+              return display;
+            }
+          }
+        }
+      },
+      plugins: [ChartDataLabels, topLabels_chart_2]
+    });
+  });
+
+</script>
+{% endblock %}

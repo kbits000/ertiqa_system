@@ -1,0 +1,37 @@
+{% extends 'base/manager/home_manager.html' %}
+
+{% load static %}
+
+{% block navbar_title_url %}{% url 'manager' %}{% endblock %}
+
+{% block title %}OWLP - Manager - Change Prices{% endblock %}
+
+{% block main %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Change Prices</h1>
+</div>
+
+<div class='mt-4 mb-3'>
+    <div class="row">
+        <div class="bg-primary mt-2 border border-3 border-primary-subtle fs-4 font-monospace" style="width:fit-content;height:fit-content;">
+            <a href="{% url 'manager-change-windows-price' %}" class="text-white px-3 py-5">Change Windows Price</a>
+        </div >
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="bg-primary mt-5 mb-5 ms-3 border border-3 border-primary-subtle fs-4 font-monospace" style="width:fit-content;height:fit-content;">
+            <a href="{% url 'manager-change-peripherals-prices' %}" class="text-white px-3 py-5">Change Peripheral(s) Prices</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="bg-primary mt-2 ms-3 border border-3 border-primary-subtle fs-4 font-monospace" style="width:fit-content;height:fit-content;">
+            <a href="{% url 'manager-change-spare-parts-prices-list' %}" class="text-white px-3 py-5">Change Spare Part(s) Prices</a>
+        </div >
+    </div>
+
+</div>
+
+{% endblock %}

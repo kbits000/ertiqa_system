@@ -1,0 +1,376 @@
+{% extends "base/home.html" %}
+
+{% block main %}
+<h1>REQUEST REFURBISHMENT</h1>
+<form method="post" action="{% url 'request-refurbishment' %}" id="kkkk"> {% csrf_token %}
+
+
+    <div class="form-floating" id="subFormBlock">
+
+    </div>
+
+
+    <div class="mb-3 mt-3">
+        <button type="button" class="btn btn-success btn-sm" id="addAnotherDevicesCategoryBtn">Add Another Devices'
+            Category
+        </button>
+    </div>
+
+    <div class="mb-3 mt-3">
+        <label for="sendingdate">Sending Date:</label>
+        <input type="datetime-local" id="sendingdate" name="sendingdate">
+    </div>
+    <div class="form-floating mb-3 mt-3">
+        <textarea class="form-control" rows="5" id="description" name="text" placeholder="description"></textarea>
+        <label for="description">Description</label>
+    </div>
+    <button type="submit" class="btn btn-primary">Send</button>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+        let categoryList = ['Laptop', 'PC', 'Tablet'];
+        let operatingSystemList = ['Windows', 'macOS', 'Linux', 'iOS', 'Android'];
+        let donorList = ['Aramco', 'Sabic', 'KFUPM', 'Mix'];
+        let optionElementsList = []    // pushed elements
+        let id = 1;
+
+        function createOptionElements() {
+            categoryList.forEach(createOptionElement);
+        }
+
+        function createOptionElement(value, index, array) {
+            let optionElement = document.createElement("option");
+            optionElement.innerHTML = `${value}`;
+
+            optionElementsList.push(optionElement);
+        }
+
+        function changeIds(removedId) {
+            let a = parseInt(removedId) + 1;
+            for (let i = a; i < id; i++) {
+
+                let decremented_i = i;
+                decremented_i--;
+                // rows
+                var divRowElement = document.getElementById(`row${i}`);
+                // Column 1 (Categories)
+                var divDeviceCategoryElement = document.getElementById(`deviceCategory${i}`);
+                let nameAttribute1 = document.createAttribute('name');
+                nameAttribute1.value = `deviceCategory${decremented_i}`;
+                divDeviceCategoryElement.setAttributeNode(nameAttribute1);
+                // divDeviceCategoryElement.name = `deviceCategory${decremented_i}`;         WRONG
+
+                var selectCategoryListElement = document.getElementById(`categoryList${i}`);
+                selectCategoryListElement.name = `categoryList${decremented_i}`;
+                let nameAttribute2 = document.createAttribute('name');
+                nameAttribute2.value = `categoryList${decremented_i}`;
+                selectCategoryListElement.setAttributeNode(nameAttribute2);
+
+
+                var labelCategoryList = document.getElementById(`categoryListLabel${i}`);
+                let forAttribute1 = document.createAttribute('for');
+                forAttribute1.value = `categoryList${decremented_i}`;
+                labelCategoryList.setAttributeNode(forAttribute1);
+                // labelCategoryList.for = `categoryList${decremented_i}`;                          WRONG
+
+                // Column 2 (Operating Systems)
+                var divOperatingSystemElement = document.getElementById(`operatingSystem${i}`);
+                let nameAttribute3 = document.createAttribute('name');
+                nameAttribute3.value = `operatingSystem${decremented_i}`;
+                divOperatingSystemElement.setAttributeNode(nameAttribute3);
+                // divOperatingSystemElement.name = `operatingSystem${decremented_i}`;              WRONG
+
+                var selectOperatingSystemListElement = document.getElementById(`operatingSystemList${i}`);
+                let nameAttribute4 = document.createAttribute('name');
+                nameAttribute4.value = `operatingSystemList${decremented_i}`;
+                selectOperatingSystemListElement.setAttributeNode(nameAttribute4);
+                // selectOperatingSystemListElement.name = `operatingSystemList${decremented_i}`;   WRONG
+
+                var labelOperatingSystemListElement = document.getElementById(`operatingSystemListLabel${i}`);
+                let forAttribute2 = document.createAttribute('for');
+                forAttribute2.value = `operatingSystemList${decremented_i}`;
+                labelOperatingSystemListElement.setAttributeNode(forAttribute2);
+                // labelOperatingSystemListElement.for = `operatingSystemList${decremented_i}`;     WRONG
+
+                // Column 3 (Donor)
+                var divDonorElement = document.getElementById(`donor${i}`);
+
+
+
+                var selectDonorListElement = document.getElementById(`donorList${i}`);
+                let nameAttribute5 = document.createAttribute('name');
+                nameAttribute5.value = `donorList${decremented_i}`;
+                selectDonorListElement.setAttributeNode(nameAttribute5);
+                // selectDonorListElement.name = `donorList${decremented_i}`;                        WRONG
+
+                var labelDonorListElement = document.getElementById(`donorListLabel${i}`);
+                let forAttribute3 = document.createAttribute('for');
+                forAttribute3.value = `donorList${decremented_i}`;
+                labelDonorListElement.setAttributeNode(forAttribute3);
+                // labelDonorListElement.for = `donorList${decremented_i}`;                          WRONG
+
+                var inputQuantityElement = document.getElementById(`quantity${i}`);
+                let nameAttribute6 = document.createAttribute('name');
+                nameAttribute6.value = `quantity${decremented_i}`;
+                inputQuantityElement.setAttributeNode(nameAttribute6);
+                // inputQuantityElement.name = `quantity${decremented_i}`;                           WRONG
+
+
+                var buttonRemoveElement = document.getElementById(`button${i}`);
+                divRowElement.id = `row${decremented_i}`;
+
+                divDeviceCategoryElement.id = `deviceCategory${decremented_i}`;
+
+                selectCategoryListElement.id = `categoryList${decremented_i}`;
+
+                labelCategoryList.id = `categoryListLabel${decremented_i}`;
+
+                divOperatingSystemElement.id = `operatingSystem${decremented_i}`;
+
+                selectOperatingSystemListElement.id = `operatingSystemList${decremented_i}`;
+
+                labelOperatingSystemListElement.id = `operatingSystemListLabel${decremented_i}`;
+                divDonorElement.id = `donor${decremented_i}`;
+                selectDonorListElement.id = `donorList${decremented_i}`;
+
+                labelDonorListElement.id = `donorListLabel${decremented_i}`;
+                inputQuantityElement.id = `quantity${decremented_i}`;
+                buttonRemoveElement.id = `button${decremented_i}`;
+            }
+            id--;
+        }
+
+        function removeRow() {
+            rowToBeRemoved = document.getElementById(`row${this.id.slice(6)}`);
+            let idToBeRemoved = this.id.slice(6);
+            // Change ids of everything after id
+            rowToBeRemoved.textContent = '';
+            rowToBeRemoved.remove();
+            changeIds(idToBeRemoved);
+        }
+
+        function createRemoveButton() {
+            let buttonElement = document.createElement("button");
+            buttonElement.className = "btn btn-danger";
+            let typeAttribute = document.createAttribute("type");
+            typeAttribute.value = "button";
+            let idAttribute = document.createAttribute('id');
+            idAttribute.value = 'button' + `${id}`;
+            buttonElement.setAttributeNode(idAttribute);
+            buttonElement.innerHTML = 'Remove';
+            buttonElement.onclick = removeRow;
+            return buttonElement;
+        }
+
+        function createInputElement() {
+            let inputElement = document.createElement("input");
+            inputElement.className = "form-control";
+            let typeAttribute = document.createAttribute("type");
+            typeAttribute.value = "number";
+            let placeholderAttribute = document.createAttribute("placeholder");
+            placeholderAttribute.value = "Number of Devices";
+            let nameAttribute = document.createAttribute("name");
+            nameAttribute.value = "quantity" + `${id}`;
+            let minAttribute = document.createAttribute("min");
+            minAttribute.value = "1";
+            let idAttribute = document.createAttribute('id');
+            idAttribute.value = "quantity" + `${id}`;
+
+            inputElement.setAttributeNode(typeAttribute);
+            inputElement.setAttributeNode(placeholderAttribute);
+            inputElement.setAttributeNode(nameAttribute);
+            inputElement.setAttributeNode(minAttribute);
+            inputElement.setAttributeNode(idAttribute);
+            // document.getElementsByClassName("col")[1].appendChild(inputElement);
+            return inputElement;
+        }
+
+
+
+
+        function createSelectAndLabelForCategories() {
+            let selectElement = document.createElement("select");
+            selectElement.className = 'form-select';
+            let nameAttribute = document.createAttribute("name");
+            nameAttribute.value = "categoryList" + `${id}`;
+            let idAttribute = document.createAttribute("id");
+            // ID
+            idAttribute.value = `categoryList${id}`;
+            selectElement.setAttributeNode(nameAttribute);
+            selectElement.setAttributeNode(idAttribute);
+
+            // let optionElement = document.createElement("option");
+            // optionElement.innerHTML = 'Laptop';
+            // let optionElement2 = document.createElement("option");
+            // optionElement2.innerHTML = 'PC';
+
+            // selectElement.appendChild(optionElement);
+            // selectElement.appendChild(optionElement2);
+
+            let labelElement = document.createElement("label");
+            let forAttribute = document.createAttribute("for");
+            let categoryListLabelID = document.createAttribute('id');
+            categoryListLabelID.value = `categoryListLabel${id}`;
+            forAttribute.value = `categoryList${id}`;
+            labelElement.className = 'form-label';
+            labelElement.innerHTML = "Devices' Category (select one):";
+            labelElement.setAttributeNode(forAttribute);
+            labelElement.setAttributeNode(categoryListLabelID);
+
+
+            document.getElementById(`deviceCategory${id}`).appendChild(selectElement);
+            document.getElementById(`deviceCategory${id}`).appendChild(labelElement);
+
+            // call options
+
+        }
+
+
+
+        function createSelectAndOptionsForOperatingSystem() {
+            let selectElement = document.createElement("select");
+            selectElement.className = 'form-select';
+            let nameAttribute = document.createAttribute("name");
+            nameAttribute.value = "operatingSystemList" + `${id}`;
+            let idAttribute = document.createAttribute("id");
+            // ID
+            idAttribute.value = `operatingSystemList${id}`;
+            selectElement.setAttributeNode(nameAttribute);
+            selectElement.setAttributeNode(idAttribute);
+
+
+            let labelElement = document.createElement("label");
+            let forAttribute = document.createAttribute("for");
+            let operatingSystemListLabelId = document.createAttribute('id');
+            operatingSystemListLabelId.value = `operatingSystemListLabel${id}`;
+            forAttribute.value = `operatingSystemList${id}`;
+            labelElement.className = 'form-label';
+            labelElement.innerHTML = "Operating System (select one):";
+            labelElement.setAttributeNode(forAttribute);
+            labelElement.setAttributeNode(operatingSystemListLabelId);
+
+            // Options
+            for (let i = 0; i < operatingSystemList.length; i++) {
+                let optionElement = document.createElement('option');
+                let idOperatingSystemOption = document.createAttribute('id');
+                optionElement.setAttributeNode(idOperatingSystemOption);
+                optionElement.innerHTML = `${operatingSystemList[i]}`;
+                selectElement.appendChild(optionElement);
+            }
+
+            document.getElementById(`operatingSystem${id}`).appendChild(selectElement);
+            document.getElementById(`operatingSystem${id}`).appendChild(labelElement);
+            // call options
+        }
+
+        function createSelectAndLabelForDonor() {
+            let selectElement = document.createElement("select");
+            selectElement.className = 'form-select';
+            let nameAttribute = document.createAttribute("name");
+            nameAttribute.value = "donorList" + `${id}`;
+            let idAttribute = document.createAttribute("id");
+            // ID
+            idAttribute.value = `donorList${id}`;
+            selectElement.setAttributeNode(nameAttribute);
+            selectElement.setAttributeNode(idAttribute);
+
+            let labelElement = document.createElement("label");
+            let forAttribute = document.createAttribute("for");
+            let labelIdAttribute = document.createAttribute('id');
+            labelIdAttribute.value = `donorListLabel${id}`;
+            forAttribute.value = `donorList${id}`;
+            labelElement.className = 'form-label';
+            labelElement.innerHTML = "Donor (select one):";
+            labelElement.setAttributeNode(forAttribute);
+            labelElement.setAttributeNode(labelIdAttribute);
+
+            // Options
+            for (let i = 0; i < donorList.length; i++) {
+                let optionElement = document.createElement('option');
+                let idDonorOption = document.createAttribute('id');
+                optionElement.setAttributeNode(idDonorOption);
+                optionElement.innerHTML = `${donorList[i]}`;
+                selectElement.appendChild(optionElement);
+            }
+
+            document.getElementById(`donor${id}`).appendChild(selectElement);
+            document.getElementById(`donor${id}`).appendChild(labelElement);
+            // call options
+        }
+
+        function createCloumnDiv() {
+            // Column 1
+            let divElement = document.createElement("div");
+            divElement.className = "col form-floating";
+            var idAttribute = document.createAttribute("id");
+            idAttribute.value = "deviceCategory" + `${id}`;
+            // idAttribute.value = "columnA" + `${id}`;
+            divElement.setAttributeNode(idAttribute);
+            var nameAttribute = document.createAttribute('name');
+            nameAttribute.value = "deviceCategory" + `${id}`
+            divElement.setAttributeNode(nameAttribute);
+            document.getElementById(`row${id}`).appendChild(divElement);
+
+            // Column operating System
+            let divOperatingSystemElement = document.createElement("div");
+            divOperatingSystemElement.className = "col";
+            var idAttribute = document.createAttribute("id");
+            idAttribute.value = "operatingSystem" + `${id}`;
+            divOperatingSystemElement.setAttributeNode(idAttribute);
+            var nameAttribute = document.createAttribute('name');
+            nameAttribute.value = "operatingSystem" + `${id}`;
+            divOperatingSystemElement.setAttributeNode(nameAttribute);
+            document.getElementById(`row${id}`).appendChild(divOperatingSystemElement);
+            createSelectAndOptionsForOperatingSystem();
+
+            // Donor Column
+            let divDonotElement = document.createElement('div');
+            divDonotElement.className = 'col';
+            var idAttribute = document.createAttribute("id");
+            idAttribute.value = "donor" + `${id}`;
+            divDonotElement.setAttributeNode(idAttribute);
+            document.getElementById(`row${id}`).appendChild(divDonotElement);
+            createSelectAndLabelForDonor();
+
+            // Column 3
+            let divElement2 = document.createElement("div");
+            divElement2.className = "col";
+            document.getElementById(`row${id}`).appendChild(divElement2);
+            let inputElement = createInputElement();
+            divElement2.appendChild(inputElement);
+
+            // Column 4
+            let divElement3 = document.createElement("div");
+            divElement3.className = "col";
+            removeButtonElement = createRemoveButton();
+            divElement3.appendChild(removeButtonElement);
+            document.getElementById(`row${id}`).appendChild(divElement3);
+            // alert("Hello World!");
+            createSelectAndLabelForCategories();
+            id = id + 1;
+        }
+
+        function createRowDiv() {
+            let divElement = document.createElement("div");
+            divElement.className = "row";
+            let idAttribute = document.createAttribute('id');
+            idAttribute.value = 'row' + `${id}`;
+            divElement.setAttributeNode(idAttribute);
+            document.getElementById('subFormBlock').appendChild(divElement);
+            // ids = ids + 1;
+            createCloumnDiv();
+        }
+
+
+
+        function myFunction() {
+            createSelectAndLabelForCategories();
+        }
+
+        var btn = document.getElementById("addAnotherDevicesCategoryBtn");
+        btn.onclick = createRowDiv;
+
+</script>
+{% endblock %}

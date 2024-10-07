@@ -1,0 +1,86 @@
+{% extends 'base/operation_lab/home_operation_lab.html' %}
+
+{% block title %}Operation Lab - Devices Added by {{request.user}}{% endblock %}
+
+{% block main_header %}
+    <div>
+        <h2 class="h2">Device(s) Added By {{request.user}}</h2>
+    </div>
+{% endblock %}
+
+{% block main %}
+{% comment %} <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h2>Device(s) Added By {{request.user}}</h2>
+</div> {% endcomment %}
+
+
+<form method="GET" action="#">
+    <div class="mb-2 mt-4 input-group">
+      <input type="search" class="form-control form-control-lg" id="search-bar" placeholder="Search"name="q">
+      <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+</form>
+
+<div class="table-responsive">
+    <table class="table table-hover mt-2 text-center">
+      <thead>
+        <tr class="table-primary">
+          <th scope="col" class="fs-5 fw-bold">#</th>
+          <th scope="col" class="fw-bold">Barcode</th>
+          <th scope="col" class="fw-bold">Category</th>
+          <th scope="col" class="fw-bold">Donor</th>
+          <th scope="col" class="fw-bold">Date Added</th>
+          <th scope="col" class="fw-bold">Updation Request</th>
+          <th scope="col" class="fw-bold">Total Spendings</th>
+          <th scope="col" class="fw-bold">Status</th>
+        </tr>
+      </thead>
+      <tbody class="table-group-divider">
+
+        {% for single_details in devices_added_by_user_brief_details %}
+          <tr data-href="{% url 'devices-added-by-user-details' single_details.device.id %}">
+            <td class="fs-5 fw-bold">{{forloop.counter}}</td>
+            <td >{{single_details.device.barcode}}</td>
+            <td>{{single_details.device.category.name}}</td>
+            
+            {% if single_details.device.individual_donor_flag == True %}
+              <td>Individual Person</td>
+            {% else %}
+              <td>{{single_details.device.corporate_donor.name}}</td>
+            {% endif %}
+
+            <td>{{single_details.device.added|date:"l, d M, Y"}}</td>
+            
+            <td>Updation</td>
+
+            <td>{{single_details.total_spendings|floatformat:3}} SAR</td>
+
+            {% if single_details.device.status == 'scrapped' %}
+              <td>Scrapped</td>
+            {% else %}
+              <td>Refurbished/Ready</td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+
+
+      </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  $(document).ready(function () {
+    let rows = document.getElementsByTagName('table')[0].rows;
+    console.log(rows);
+    Array.from(rows).forEach(row => {
+      row.addEventListener("click", function () {
+        window.location.href = this.getAttribute('data-href');
+      });
+    });
+
+
+  });
+</script>
+{% endblock %}

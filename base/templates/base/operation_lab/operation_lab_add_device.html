@@ -1,0 +1,841 @@
+{% extends 'base/operation_lab/home_operation_lab.html' %}
+{% load static %}
+{% block title %}Operation Lab - Add Device{% endblock %}
+
+{% block head %}
+<script type="text/javascript" src="{% static 'base/jQuery/code.jquery.com_jquery-3.7.0.min.js' %}"></script>
+{% endblock %}
+
+{% block main_header %}
+    <div>
+        <h2 class="h2">Add Device</h2>
+    </div>
+{% endblock %}
+
+{% block main %}
+
+{% include "base/messages.html" %}
+
+{% comment %} <div class="mb-3 mt-3">
+    <h1 class="fs-5 text-primary">Add Device</h1>
+</div> {% endcomment %}
+
+<form method="POST" action="#" id="add-device-form" class="fs-6 mt-3"> {% csrf_token %}
+
+    <div class="mb-3 mt-3">
+        <label for="barcode">Barcode:</label>
+        <input type="text" class="form-control mt-3" placeholder="Barcode" name="barcode" id="barcode" required>
+    </div>
+
+
+    <div class="mb-3 mt-3">
+        <label for="serial-number">Serial Number (optional):</label>
+        <input type="text" class="form-control mt-3" placeholder="Serial Number" name="serial-number"
+               id="serial-number">
+    </div>
+
+
+    <div class="row">
+        <div class="col">
+            <label for="donor" class="form-label">Donor:</label>
+            <select class="form-select" id="donor" name="donor" required>
+                <option value="">------------------------</option>
+                <option>Individual Person</option>
+                {% for corporate_donor in corporate_donors %}
+                <option value="{{corporate_donor.name}}">{{corporate_donor}}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col">
+            <label for="category" class="form-label">Category:</label>
+            <select class="form-select" id="category" name="category" required>
+                <option value="">------------------------</option>
+                {% for category in categories %}
+                <option>{{category}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col">
+            <label for="oem-brand" class="form-label">OEM Brand:</label>
+            <select class="form-select" id="oem-brand" name="oem-brand" required>
+                <option value="">------------------------</option>
+                {% for oem_brand in oem_brands %}
+                <option>{{oem_brand}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col">
+            <label for="operating-system" class="form-label">Operating System:</label>
+            <select class="form-select" id="operating-system" name="operating-system" required>
+                <option value="" id='empty-operating-system-option'>-- select an option --</option>
+                <option id="option-macos">macOS</option>
+                <option id="option-ios">iOS</option>
+                <option id="option-windows">Windows</option>
+                <option id="option-linux">Linux</option>
+                <option id="option-android">Andriod</option>
+            </select>
+        </div>
+        <div class="col">
+            <label for="processor" class="form-label">Processor (select one):</label>
+            <select class="form-select" id="processor" name="processor">
+                <option value="">------------------------</option>
+                {% for processor in processors %}
+                <option>{{processor}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col">
+            <label for="status" class="form-label">Status:</label>
+            <select class="form-select" id="status" name="status" required>
+                <option value="">------------------------</option>
+                <option>Ready</option>
+                <option>Scrap</option>
+            </select>
+        </div>
+
+    </div>
+
+
+    <!-- WINDOWS -->
+    <div id="windows-block">
+        <div class="mt-4" id="windows-details-block">
+            <hr class="mt-5">
+
+            <div>
+                <div id="windows-header" class="text-center ">
+                    <img src="{% static 'base/images/windows.svg' %}" alt="Windows logo" class="d-inline align-top me-1"
+                         style="width: 32px; height: 32px;">
+                    <h3 class="d-inline">Windows Details</h3>
+                </div>
+            </div>
+
+            <div id="windows-details">
+                <div class="mb-3 mt-3">
+                    <label for="report-name" class="form-label">Report Name:</label>
+                    <input type="text" class="form-control" id="report-name" placeholder="E.g., MAR-Citizenship"
+                           name="report-name" required>
+                </div>
+                <div class="mb-3 mt-3">
+                    <label for="mar-name" class="form-label">MAR Name:</label>
+                    <input type="text" class="form-control" id="mar-name" placeholder="E.g., ACTIVE-IT s.c."
+                           name="mar-name" required>
+                </div>
+                <div class="mb-3 mt-3">
+                    <label for="product-installed" class="form-label">Product Installed:</label>
+                    <input type="text" class="form-control" id="product-installed"
+                           placeholder="E.g., Windows 10 PRO Citizenship" name="product-installed" required>
+                </div>
+                <div class="mb-3 mt-3">
+                    <label for="mar-coa-sn" class="form-label">MAR COA SN:</label>
+                    <input type="text" class="form-control" id="mar-coa-sn" placeholder="I.e., product key"
+                           name="mar-coa-sn" required>
+                </div>
+
+                <div class="mb-3 mt-3">
+                    <img src="{% static 'base/images/calendar3.svg' %}" alt="calendar icon">
+                    <label for="installation-date" class="form-label">Installation Date:</label>
+                    <input type="date" id="installation-date" name="installation-date" required>
+                </div>
+                <div class="form-floating mb-5 mt-3">
+                    <textarea class="form-control border border-primary" id="remark-windows" name="remark-windows"
+                              placeholder="remark" style="height:100px"></textarea>
+                    <label for="remark">Remarks For Windows</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <hr class="mt-5">
+
+
+    <div class="mb-5">
+        <h3 class="fs-6">Optionals</h3>
+        <div class="row mt-3">
+            <div class="col">
+                <label for="ram-size" class="form-label">RAM Size (optional):</label>
+                <select class="form-select" id="ram-size" name="ram-size">
+                    <option value="">------------------------</option>
+                    {% for ram_size in ram_sizes %}
+                    <option value="{{ram_size.size}}">{{ram_size.size}} GB</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col">
+                <label for="ram-size" class="form-label">Display Size (optional):</label>
+                <select class="form-select" id="display-size" name="display-size">
+                    <option value="">------------------------</option>
+                    {% for display_size in display_sizes %}
+                    <option value="{{display_size.size}}">{{display_size.size}}"</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col">
+                <label for="gpu" class="form-label">GPU (optional):</label>
+                <select class="form-select" id="gpu" name="gpu">
+                    <option value="">------------------------</option>
+                    {% for gpu in gpus %}
+                    <option>{{gpu.name}}</option>
+                    {% endfor %}
+                    <option>Nvidia GeForce 720M</option>
+                    <option>Nvidia GeForce 945M</option>
+                    <option>Nvidia GeForce GTX 950M</option>
+                </select>
+            </div>
+        </div>
+
+        <hr class='mb-4 mt-4'>
+
+        <!-- For Peripherals -->
+        <div class="row">
+            <div class="col-2">
+                <label for="parts-list" class="form-label">Peripherals List:</label>
+                <select class="form-select" id="parts-list" name="parts-list">
+                    <option value="">---------------</option>
+                    {% for peripheral in computer_peripherals %}
+                    <option value="{{peripheral.name.name}}" data-has-price="no"
+                            data-serial-number="{{peripheral.name.serial_number}}">{{peripheral.name.name}},
+                        {{peripheral.name.serial_number}}
+                    </option>
+                    {% if peripheral.price %}
+                    <option value="{{peripheral.name.name}}" data-price="{{peripheral.price.price}}"
+                            data-has-price="yes" data-serial-number="{{peripheral.name.serial_number}}">
+                        {{peripheral.name.name}}, {{peripheral.name.serial_number}}, {{peripheral.price.price}} SAR
+                    </option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-2">
+                <div class="d-flex flex-column mx-auto" style="width:60%;">
+                    <label class="form-label" for="part-quantity">Quantity</label>
+                    <input type="number" id="part-quantity" name="part-quantity" min="1" class="form-control"
+                           onkeyup="if(value<1) value=1;">
+                </div>
+            </div>
+
+
+            <div class="col-1" style="padding-top:31px;">
+                <button type="button"
+                        class="btn btn-light focus-ring focus-ring-dark border border-black text-center text-nowrap"
+                        id="addBtn">Add &#62&#62
+                </button>
+            </div>
+
+
+            <div class="col-7">
+                <table class="table table-striped table-bordered table-hover table-sm text-center">
+                    <thead>
+                    <tr>
+                        <th scope="col">Peripheral Added Name</th>
+                        <th scope="col">Serial Number</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Price</th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody id="table-body" class="table-group-divider">
+
+                    </tbody>
+                    {% comment %} <tfoot>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td>Total</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tfoot> {% endcomment %}
+                </table>
+            </div>
+
+        </div>
+
+        <div class='mb-5 mt-5'>
+            <hr>
+        </div>
+
+
+        <!-- For Spare Parts -->
+        <div class='row'>
+            <div class="col-2">
+                <label for="parts-list" class="form-label">Spare Parts List:</label>
+                <select class="form-select" id="spare-parts-list" name="spare-parts-list">
+                    <option value="">---------------</option>
+                    {% for spare_part in computer_spare_parts %}
+                    <option value="{{spare_part.name.name}}" data-has-price="no"
+                            data-serial-number="{{spare_part.name.serial_number}}">{{spare_part.name.name}},
+                        {{spare_part.name.serial_number}}
+                    </option>
+                    {% if spare_part.price %}
+                    <option value="{{spare_part.name.name}}" data-price="{{spare_part.price.price}}"
+                            data-has-price="yes" data-serial-number="{{spare_part.name.serial_number}}">
+                        {{spare_part.name.name}}, {{spare_part.name.serial_number}}, {{spare_part.price.price}} SAR
+                    </option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-2">
+                <div class="d-flex flex-column mx-auto" style="width:60%;">
+                    <label class="form-label" for="part-quantity">Quantity</label>
+                    <input type="number" id="spare-part-quantity" name="part-quantity" min="1" class="form-control"
+                           onkeyup="if(value<1) value=1;">
+                </div>
+            </div>
+
+
+            <div class="col-1" style="padding-top:31px;">
+                <button type="button"
+                        class="btn btn-light focus-ring focus-ring-dark border border-black text-center text-nowrap"
+                        id="add-spare-part-button">Add &#62&#62
+                </button>
+            </div>
+
+
+            <div class="col-7">
+                <table class="table table-striped table-bordered table-hover table-sm text-center">
+                    <thead>
+                    <tr>
+                        <th scope="col">Spare Part Added Name</th>
+                        <th scope="col">Serial Number</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Price</th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody id="table-body-spare-parts" class="table-group-divider">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class='mb-5 mt-5'>
+            <hr>
+        </div>
+
+        <!-- For Software -->
+        <div class='row'>
+            <div class="col-2">
+                <label for="software-list" class="form-label">Software List:</label>
+                <select class="form-select" id="software-list" name="software-list">
+                    <option value="">---------------</option>
+                    {% for single_software in software %}
+                        <option>{{single_software.name}}</option>
+                        {% if single_software.price %}
+                            <option value="{{single_software.name}}" data-price="{{single_software.price.price}}" data-has-price="yes">{{single_software.name}}, {{single_software.price.price}} SAR</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-2" style="padding-top:31px;">
+                <button type="button"
+                        class="btn btn-light focus-ring focus-ring-dark border border-black text-center text-nowrap"
+                        id="add-software-button">Add &#62&#62
+                </button>
+            </div>
+
+
+            <div class="col-6 ms-auto">
+                <table id="table-software" class="table table-striped table-bordered table-hover table-sm text-center">
+                    <thead>
+                        <tr>
+                            <th scope="col">Software Added Name</th>
+                            <th scope="col">Price</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    
+                    <tbody id="table-body-software" class="table-group-divider">
+
+                    </tbody>
+                    
+                    <tfoot id="windows-price-footer">
+                        <tr>
+                            <td>Windwos</td>
+                            <td>{{windows_price.price|floatformat:3}} SAR</td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="form-floating mb-5 mt-3">
+        <textarea class="form-control border border-primary" id="remark" name="remark" placeholder="remark"
+                  style="height:150px"></textarea>
+        <label for="remark">Remarks</label>
+    </div>
+
+
+    <div class="mb-3 mt-3">
+        <button type="submit" class="btn btn-primary focus-ring focus-ring-dark btn-lg" id="add-device-button">Add
+        </button>
+    </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+    $(document).ready(function () {
+      var windowsDetailsBlock;
+      windowsDetailsBlock = $("#windows-details-block").detach();
+      windowsPriceFooter = $("#windows-price-footer").detach();
+      let isRemoved = true;
+      $("#operating-system").change(function () {
+        if ($("#operating-system").val() == "Windows" && $("#status").val()  != "Scrap") {
+          //console.log("Windows is SELECTED");
+          $("#windows-block").append(windowsDetailsBlock);
+          $("#processor").attr("requried", "");
+          $("#table-software").append(windowsPriceFooter);
+          isRemoved = false;
+        } else {
+          if (isRemoved) {
+            return null;
+          } else {
+            //console.log("Windows is NOT SELECTED");
+            windowsDetailsBlock = $("#windows-details-block").detach();
+            windowsPriceFooter = $("#windows-price-footer").detach();
+            $("#processor").removeAttr("requried");
+            $("#empty-operating-system-option").attr("selected", "");
+            isRemoved = true;
+          }
+        }
+      });
+
+      $("#status").change(function() {
+        if ($("#status").val()  == "Scrap" && $("#operating-system").val() == "Windows") {
+            windowsDetailsBlock = $("#windows-details-block").detach();
+            windowsPriceFooter = $("#windows-price-footer").detach();
+            $("#processor").removeAttr("requried");
+            $("#empty-operating-system-option").attr("selected", "");
+            isRemoved = true;
+        } else if ($("#status").val()  == "Ready" && $("#operating-system").val() == "Windows") {
+            if (!isRemoved) {
+                // Already exists
+                return null;
+            } else {
+                // Does not exist
+                $("#windows-block").append(windowsDetailsBlock);
+                $("#processor").attr("requried", "");
+                isRemoved = false;
+            }
+        }
+      });
+
+      let operatingSystemsOption;
+      //$("#operating-system").change(function() {
+      //  if ($("#status").val()  == "Scrap") {
+      //      $("#empty-operating-system-option").attr("selected", "");
+      //      $("#empty-operating-system-option").attr("selected", "");
+      //      return null;
+      //  }
+      //});
+
+
+      // FOR OEM-Brands
+      var windows;
+      var linux;
+      var android;
+      $("#oem-brand").change(function () {
+        if ($("#oem-brand").val() == "Apple") {
+          windows = $("#option-windows").detach();
+          linux = $("#option-linux").detach();
+          android = $("#option-android").detach();
+          console.log(`is Windows Details Removed? ${isRemoved}`);
+          // REMOVE WINDOWS DETAILS
+          if (isRemoved == false) {
+            windowsDetailsBlock = $("#windows-details-block").detach();
+            isRemoved = true;
+          }
+          // MAKE PROCESSOR UNREQUIRED
+          $("#processor").removeAttr("required");
+        } else {
+          if ($("#option-windows").length == 0) {
+            $("#operating-system").append(windows);
+            $("#operating-system").append(linux);
+            $("#operating-system").append(android);
+            // MAKE PROCESSOR REQUIRED
+            $("#processor").attr("requried", "");
+            if ($("#operating-system").val() == "Windows") {
+              $("#windows-block").append(windowsDetailsBlock);
+              isRemoved = false;
+            }
+          }
+        }
+      });
+
+
+      let numberOfRows = 0;
+      // Add Peripherals
+      $("#addBtn").click(function () {
+        let selectedPartName = $("#parts-list").val();
+        let partSerialNumber = $("#parts-list").find("option:selected").attr("data-serial-number");
+        let partQuantity = $("#part-quantity").val();
+        let partPrice = $("#parts-list").find("option:selected").attr("data-price");
+
+        if (selectedPartName != "" & partQuantity != "") {
+          let tableRowElement = $("<tr>");
+          tableRowElement.attr("id", `table-row-${numberOfRows + 1}`)
+
+          // Part Name
+          let tableDataElement_partName = $("<td>");
+          let inputElement_partName = $("<input>");
+          inputElement_partName.addClass("form-control bg-transparent border-0 text-center");
+          inputElement_partName.attr("type", "text");
+          inputElement_partName.val(selectedPartName);
+          inputElement_partName.attr("id", `part-added-name-${numberOfRows + 1}`);
+          inputElement_partName.attr("name", `part-added-name-${numberOfRows + 1}`);
+          inputElement_partName.attr("required", "");
+          tableDataElement_partName.append(inputElement_partName);
+
+          // Serial Number
+          let tableDataElement_serialNumber = $("<td>");
+          let inputElement_serialNumber = $("<input>");
+          inputElement_serialNumber.addClass("form-control bg-transparent border-0 text-center");
+          inputElement_serialNumber.attr("type", "text");
+          inputElement_serialNumber.val(partSerialNumber);
+          inputElement_serialNumber.attr("id", `part-added-serial-number-${numberOfRows + 1}`);
+          inputElement_serialNumber.attr("name", `part-added-serial-number-${numberOfRows + 1}`);
+          inputElement_serialNumber.attr("required", "");
+          tableDataElement_serialNumber.append(inputElement_serialNumber);
+
+          // Quantity
+          let tableDataElement_quantity = $("<td>");
+          let inputElement_quatity = $("<input>");
+          inputElement_quatity.addClass("form-control bg-transparent border-0 text-center");
+          inputElement_quatity.attr("type", "text");
+          inputElement_quatity.val(partQuantity);
+          inputElement_quatity.attr("id", `part-added-quantity-${numberOfRows + 1}`);
+          inputElement_quatity.attr("name", `part-added-quantity-${numberOfRows + 1}`);
+          inputElement_quatity.attr("required", "");
+          tableDataElement_quantity.append(inputElement_quatity);
+
+          // Price
+
+          let tableDataElement_price = $("<td>");
+          let inputElement_price = $("<input>");
+          
+          if (partPrice != undefined) {
+            let totalPrice;
+            totalPrice = parseFloat(partPrice) * parseFloat(partQuantity);
+            totalPrice = totalPrice.toFixed(3);
+            inputElement_price.val(totalPrice);
+          } else {
+            inputElement_price.val("0.000 SAR");
+          }
+
+          inputElement_price.addClass("form-control bg-transparent border-0 text-center");
+          inputElement_price.attr("type", "text");
+          inputElement_price.attr("id", `part-added-price-${numberOfRows + 1}`);
+          inputElement_price.attr("name", `part-added-price-${numberOfRows + 1}`);
+          inputElement_price.attr("required", "");
+          tableDataElement_price.append(inputElement_price);
+
+          // Create Deletion Button
+          let tableDataElement_deleteButton = $("<td>");
+          let buttonElement_deleteButton = $("<button>").text("Delete");
+          buttonElement_deleteButton.attr("type", "button");
+          buttonElement_deleteButton.addClass("btn btn-danger deleteButton btn-sm");
+          tableDataElement_deleteButton.append(buttonElement_deleteButton);
+
+          // Append To Table
+          tableRowElement.append(tableDataElement_partName);
+          tableRowElement.append(tableDataElement_serialNumber);
+          tableRowElement.append(tableDataElement_quantity);
+          tableRowElement.append(tableDataElement_price);
+          tableRowElement.append(tableDataElement_deleteButton);
+          $("#table-body").append(tableRowElement);
+
+          numberOfRows++;
+        }
+      });
+
+      // Deleting Rows Functionallity
+      $('body').on('click', '.deleteButton', function (e){
+        let rowTableOfPart = $(this).parent().parent();
+        rowTableOfPart.remove();
+        numberOfRows--;
+
+        // change ids
+        let rowsOfTableBody = $("tbody").children();
+
+        for (let i=0; i < rowsOfTableBody.length; i++) {
+          console.log(rowsOfTableBody[i]);
+          $(rowsOfTableBody[i]).attr("id", `table-row-${i+1}`);     // <tr>-s
+
+          let tableDatasOfRow = $(rowsOfTableBody[i]).children();
+          // Change part name of item
+          let tableData_PartName = $(tableDatasOfRow[0]).children()[0];       // Part Name
+          $(tableData_PartName).attr("id", `part-added-name-${i+1}`);
+          console.log(tableData_PartName);
+          let tableData_SerialNumber = $(tableDatasOfRow[1]).children()[0];           // Serial Number
+          $(tableData_SerialNumber).attr("id", `part-added-serial-number-${i+1}`);
+          let tableData_quantity = $(tableDatasOfRow[2]).children()[0];
+          $(tableData_quantity).attr("id", `part-added-quantity-${i+1}`);
+          let tableData_totalPrice = $(tableDatasOfRow[3]).children()[0];
+          $(tableData_totalPrice).attr("id", `part-added-price-${i+1}`);
+          // tableDatasOfRow[4].children()[0].attr
+          // Change ids of children of table row
+
+        }
+      });
+
+
+      // For Spare Parts Section
+      let numberOfRowsOfSparePartsTable = 0;
+      $("#add-spare-part-button").click(function () {
+        let selectedPartName = $("#spare-parts-list").val();
+        let partSerialNumber = $("#spare-parts-list").find("option:selected").attr("data-serial-number");
+        let partQuantity = $("#spare-part-quantity").val();
+        let partPrice = $("#spare-parts-list").find("option:selected").attr("data-price");
+
+        if (selectedPartName != "" & partQuantity != "") {
+          let tableRowElement = $("<tr>");
+          tableRowElement.attr("id", `table-row-${numberOfRowsOfSparePartsTable + 1}`)
+
+          // Part Name
+          let tableDataElement_partName = $("<td>");
+          let inputElement_sparePartName = $("<input>");
+          inputElement_sparePartName.addClass("form-control bg-transparent border-0 text-center");
+          inputElement_sparePartName.attr("type", "text");
+          inputElement_sparePartName.val(selectedPartName);
+          inputElement_sparePartName.attr("id", `spare-part-added-name-${numberOfRowsOfSparePartsTable + 1}`);
+          inputElement_sparePartName.attr("name", `spare-part-added-name-${numberOfRowsOfSparePartsTable + 1}`);
+          inputElement_sparePartName.attr("required", "");
+          tableDataElement_partName.append(inputElement_sparePartName);
+
+          // Serial Number
+          let tableDataElement_serialNumber = $("<td>");
+          let inputElement_serialNumber = $("<input>");
+          inputElement_serialNumber.addClass("form-control bg-transparent border-0 text-center");
+          inputElement_serialNumber.attr("type", "text");
+          inputElement_serialNumber.val(partSerialNumber);
+          inputElement_serialNumber.attr("id", `spare-part-added-serial-number-${numberOfRowsOfSparePartsTable + 1}`);
+          inputElement_serialNumber.attr("name", `spare-part-added-serial-number-${numberOfRowsOfSparePartsTable + 1}`);
+          inputElement_serialNumber.attr("required", "");
+          tableDataElement_serialNumber.append(inputElement_serialNumber);
+
+          // Quantity
+          let tableDataElement_quantity = $("<td>");
+          let inputElement_quatity = $("<input>");
+          inputElement_quatity.addClass("form-control bg-transparent border-0 text-center");
+          inputElement_quatity.attr("type", "text");
+          inputElement_quatity.val(partQuantity);
+          inputElement_quatity.attr("id", `spare-part-added-quantity-${numberOfRowsOfSparePartsTable + 1}`);
+          inputElement_quatity.attr("name", `spare-part-added-quantity-${numberOfRowsOfSparePartsTable + 1}`);
+          inputElement_quatity.attr("required", "");
+          tableDataElement_quantity.append(inputElement_quatity);
+
+          // Price
+
+          let tableDataElement_price = $("<td>");
+          let inputElement_price = $("<input>");
+          
+          if (partPrice != undefined) {
+            let totalPrice;
+            totalPrice = parseFloat(partPrice) * parseFloat(partQuantity);
+            totalPrice = totalPrice.toFixed(3);
+            inputElement_price.val(totalPrice);
+          } else {
+            inputElement_price.val("0.000 SAR");
+          }
+
+          inputElement_price.addClass("form-control bg-transparent border-0 text-center");
+          inputElement_price.attr("type", "text");
+          inputElement_price.attr("id", `spare-part-added-price-${numberOfRowsOfSparePartsTable + 1}`);
+          inputElement_price.attr("name", `spare-part-added-price-${numberOfRowsOfSparePartsTable + 1}`);
+          inputElement_price.attr("required", "");
+          tableDataElement_price.append(inputElement_price);
+
+          // Create Deletion Button
+          let tableDataElement_deleteButton = $("<td>");
+          let buttonElement_deleteButton = $("<button>").text("Delete");
+          buttonElement_deleteButton.attr("type", "button");
+          buttonElement_deleteButton.addClass("btn btn-danger delete-spare-part-button btn-sm");
+          tableDataElement_deleteButton.append(buttonElement_deleteButton);
+
+          // Append To Table
+          tableRowElement.append(tableDataElement_partName);
+          tableRowElement.append(tableDataElement_serialNumber);
+          tableRowElement.append(tableDataElement_quantity);
+          tableRowElement.append(tableDataElement_price);
+          tableRowElement.append(tableDataElement_deleteButton);
+          $("#table-body-spare-parts").append(tableRowElement);
+
+          numberOfRowsOfSparePartsTable++;
+        }
+      });
+
+      // Deleting Spare Part Rows Functionallity
+      $('body').on('click', '.delete-spare-part-button', function (e){
+        let rowTableOfPart = $(this).parent().parent();
+        rowTableOfPart.remove();
+        numberOfRowsOfSparePartsTable--;
+
+        // change ids
+        let rowsOfTableBody = $("#table-body-spare-parts").children();
+
+        for (let i=0; i < rowsOfTableBody.length; i++) {
+          console.log(rowsOfTableBody[i]);
+          $(rowsOfTableBody[i]).attr("id", `table-row-${i+1}`);     // <tr>-s
+
+          let tableDatasOfRow = $(rowsOfTableBody[i]).children();
+          // Change part name of item
+          let tableData_PartName = $(tableDatasOfRow[0]).children()[0];       // Part Name
+          $(tableData_PartName).attr("id", `spare-part-added-name-${i+1}`);
+          console.log(tableData_PartName);
+          let tableData_SerialNumber = $(tableDatasOfRow[1]).children()[0];           // Serial Number
+          $(tableData_SerialNumber).attr("id", `spare-part-added-serial-number-${i+1}`);
+          let tableData_quantity = $(tableDatasOfRow[2]).children()[0];
+          $(tableData_quantity).attr("id", `spare-part-added-quantity-${i+1}`);
+          let tableData_totalPrice = $(tableDatasOfRow[3]).children()[0];
+          $(tableData_totalPrice).attr("id", `spare-part-added-price-${i+1}`);
+          // tableDatasOfRow[4].children()[0].attr
+          // Change ids of children of table row
+
+        }
+      });
+
+
+
+      // For software
+      let numberOfRowsOfSoftwareTable = 0;
+      $("#add-software-button").click(function () {
+        let selectedSoftwareName = $("#software-list").val();
+        let softwarePrice = $("#software-list").find("option:selected").attr("data-price");
+
+        if (selectedSoftwareName != "") {
+          let tableRowElement = $("<tr>");
+          tableRowElement.attr("id", `table-row-${numberOfRowsOfSoftwareTable + 1}`)
+
+          // Part Name
+          let tableDataElement_partName = $("<td>");
+          let inputElement_softwareName = $("<input>");
+          inputElement_softwareName.addClass("form-control bg-transparent border-0 text-center");
+          inputElement_softwareName.attr("type", "text");
+          inputElement_softwareName.val(selectedSoftwareName);
+          inputElement_softwareName.attr("id", `software-added-name-${numberOfRowsOfSoftwareTable + 1}`);
+          inputElement_softwareName.attr("name", `software-added-name-${numberOfRowsOfSoftwareTable + 1}`);
+          inputElement_softwareName.attr("required", "");
+          tableDataElement_partName.append(inputElement_softwareName);
+
+          // Price
+          let tableDataElement_price = $("<td>");
+          let inputElement_price = $("<input>");
+          
+          if (softwarePrice != undefined) {
+            //let totalPrice;
+            //totalPrice = parseFloat(softwarePrice) * parseFloat(partQuantity);
+            //totalPrice = totalPrice.toFixed(3);
+            inputElement_price.val(`${softwarePrice} SAR`);
+          } else {
+            inputElement_price.val("0.000 SAR");
+          }
+
+          inputElement_price.addClass("form-control bg-transparent border-0 text-center");
+          inputElement_price.attr("type", "text");
+          inputElement_price.attr("id", `software-added-price-${numberOfRowsOfSoftwareTable + 1}`);
+          inputElement_price.attr("name", `software-added-price-${numberOfRowsOfSoftwareTable + 1}`);
+          inputElement_price.attr("required", "");
+          tableDataElement_price.append(inputElement_price);
+
+          // Create Deletion Button
+          let tableDataElement_deleteButton = $("<td>");
+          let buttonElement_deleteButton = $("<button>").text("Delete");
+          buttonElement_deleteButton.attr("type", "button");
+          buttonElement_deleteButton.addClass("btn btn-danger delete-software-button btn-sm");
+          tableDataElement_deleteButton.append(buttonElement_deleteButton);
+
+          // Append To Table
+          tableRowElement.append(tableDataElement_partName);
+          tableRowElement.append(tableDataElement_price);
+          tableRowElement.append(tableDataElement_deleteButton);
+          $("#table-body-software").append(tableRowElement);
+
+          numberOfRowsOfSoftwareTable++;
+        }
+      });
+
+    // Deleting Software Functionallity
+    $('body').on('click', '.delete-software-button', function (e){
+        let rowTableOfPart = $(this).parent().parent();
+        rowTableOfPart.remove();
+        numberOfRowsOfSoftwareTable--;
+
+        // change ids
+        let rowsOfTableBody = $("#table-body-software").children();
+
+        for (let i=0; i < rowsOfTableBody.length; i++) {
+            console.log(rowsOfTableBody[i]);
+            $(rowsOfTableBody[i]).attr("id", `table-row-${i+1}`);     // <tr>-s
+
+            let tableDatasOfRow = $(rowsOfTableBody[i]).children();
+            // Change part name of item
+            let tableData_SoftwareName = $(tableDatasOfRow[0]).children()[0];       // Part Name
+            $(tableData_SoftwareName).attr("id", `software-added-name-${i+1}`);
+            console.log(tableData_SoftwareName);
+            let tableData_Price = $(tableDatasOfRow[1]).children()[0];
+            $(tableData_Price).attr("id", `software-added-price-${i+1}`);
+            // tableDatasOfRow[4].children()[0].attr
+            // Change ids of children of table row
+
+        }
+        });
+      
+
+      $("#add-device-form").on( "submit", function( event ) {
+        if ($("#status").val() == "Scrap" && $.trim($("#remark").val()) == "") {
+            alert("A remark/description/cause of scrapping should be written for scrapped devices");
+            event.preventDefault();
+            return null
+        } if ( $.trim( $("#barcode").val() ) == "" ) {
+            alert("Error in barcode entry. Barcode field should not be empty neither has only space");
+            event.preventDefault();
+            return null
+        } if ( isRemoved == false ) {
+            reportNameEntry = $.trim($("#report-name"));
+            if ( $.trim( $("#report-name").val() ) == '') {
+                alert("Error in Windows report name entry. Windows report name field should not be empty neither has only space");
+                event.preventDefault();
+                return null
+            }
+            if ( $.trim( $("#mar-name").val() ) == '' ) {
+                alert("Error in Windows MAR name entry. Windows MAR name field should not be empty neither has only space");
+                event.preventDefault();
+                return null
+            }
+            if ( $.trim( $("#product-installed").val() ) == '' ) {
+                alert("Error in Windows product installed entry. Windows product installed field should not be empty neither has only space");
+                event.preventDefault();
+                return null
+            }
+            if ( $.trim( $("#mar-coa-sn").val() ) == '' ) {
+                alert("Error in Windows MAR COA SN entry. Windows MAR COA SN field should not be empty neither has only space");
+                event.preventDefault();
+                return null
+            }
+            if ( $("#installation-date").val() == '' ) {
+                alert("Error in Windows installation date entry. Windows installation date field should be selected");
+                event.preventDefault();
+                return null
+            }
+
+        } else {
+
+        }
+        });
+
+
+    });
+
+</script>
+{% endblock %}

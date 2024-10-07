@@ -1,0 +1,29 @@
+{% extends 'base/operation_lab/home_operation_lab.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block title %}Operation Lab - Requests - Main{% endblock %}
+
+{% block main_header %}
+    <div>
+        <h2 class="h2">My Requests - All</h2>
+    </div>
+{% endblock %}
+
+{% block main %}
+
+{% comment %} <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h2>My Requests - All</h2>
+</div> {% endcomment %}
+
+<div class="bg-primary mb-3 mt-4 border border-3 border-primary-subtle fs-4 font-monospace" style="width:fit-content;height:fit-content;">
+    <a href="{% url 'operation-lab-my-requests-spare-parts-peripherals-devices-request' %}" class="text-white px-3 py-5">Spare Part(s), Peripheral(s) and Device(s) Requests</a>
+</div >
+
+<div class="bg-primary mb-3 mt-3 border border-3 border-primary-subtle fs-4 font-monospace" style="width:fit-content;height:fit-content;">
+    <a href="{% url 'operation-lab-anything-requests-list' %}" class="text-white px-3 py-5">Anything Requests</a>
+</div >
+
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'base/manager/home_manager.html' %}
+
+{% load static %}
+
+{% block navbar_title_url %}{% url 'manager' %}{% endblock %}
+
+{% block title %}Manager - Change Spare Parts Prices List{% endblock %}
+
+{% block main %}
+
+{% include "base/messages.html" %}
+
+<div class="d-flex justify-content-start flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Change Spare Parts Price List*</h1>
+
+    {% comment %} <h6 class="pt-0 mt-0">Note: Prices here should not be zero.</h6> {% endcomment %}
+
+</div>
+
+
+<div class="table-responsive mt-5 mb-5">
+    <table class="table table-striped text-center">
+        <thead>
+            <th>#</th>
+            <th>Name</th>
+            <th>Serial Number</th>
+            <th>Description</th>
+            <th>Current Price</th>
+            <th></th>
+        </thead>
+        <tbody>
+            {% for spare_part_with_price in spare_parts_with_their_current_prices %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{spare_part_with_price.spare_part.name}}</td>
+                    <td>{{spare_part_with_price.spare_part.serial_number}}</td>
+                    <td>{{spare_part_with_price.spare_part.remark}}</td>
+                    {% if spare_part_with_price.price is None %}
+                        <td>No Price has been set</td>
+                    {% else %}
+                        <td>{{spare_part_with_price.price|floatformat:3}} SAR</td>
+                    {% endif %}
+                    <td><button type="button" class="btn btn-warning"><a href="{% url 'manager-change-price-of-spare-part' spare_part_with_price.spare_part.id %}">Change</a></button></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,468 @@
+{% extends 'base/operation_lab/home_operation_lab.html' %}
+{% load static %}
+{% block title %}Operation Lab - Request Spare Parts, Peripherals or Devices{% endblock %}
+
+{% block head %}
+<script type="text/javascript" src="{% static 'base/jQuery/code.jquery.com_jquery-3.7.0.min.js' %}"></script>
+{% endblock %}
+
+{% block main_header %}
+    <div>
+        <h2 class="h2">Request Spare Parts, Periperals and Devices</h2>
+    </div>
+{% endblock %}
+
+{% block main %}
+{% comment %} <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h2 class="fs-5">Request Spare Parts, Periperals and Devices</h2>
+</div> {% endcomment %}
+
+<form method="POST" action="#" id="add-device-form" class="mt-4"> {% csrf_token %}
+
+
+    <div class="row">
+
+        <div class="row">
+            <h4 class="fs-5">Spare Parts</h4>
+        </div>
+        <div class="row">
+            <div class="col-3">
+                <label for="spare-part" class="form-label">Spare Part(s):</label>
+                <select class="form-select" id="spare-part">
+                    <option value=""> -- select an option --</option>
+                    {% for spare_part in spare_parts %}
+                        <option data-serial-number="{{spare_part.serial_number}}">{{spare_part.name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-2">
+                <label class="form-label" for="spare-part-quantity">Quantity</label>
+                <input type="number" id="spare-part-quantity" min="1" class="form-control"
+                       onkeyup="if(value<1) value=1;">
+            </div>
+
+            <div class="col-1">
+                <button type="button"
+                        class="btn btn-light focus-ring focus-ring-dark border border-black text-center text-nowrap align-bottom my-4"
+                        id="add-button-spare-part">Add &#62&#62
+                </button>
+            </div>
+
+            <div class="col-6">
+                <table class="table table-striped table-bordered table-hover table-sm text-center">
+                    <thead>
+                    <tr>
+                        <th scope="col">Spare Part Name</th>
+                        <th scope="col">Serial Number</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody class="table-group-divider" id="table-body-spare-part">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <hr class="mb-3">
+
+    <div class="row">
+        <div class="col">
+            <h4 class="fs-5">Peripherals</h4>
+        </div>
+        <div class="row">
+            <div class="col-3">
+                <label for="peripheral" class="form-label">Peripheral(s):</label>
+                <select class="form-select" id="peripheral">
+                    <option value=""> -- select an option --</option>
+                    {% for peripheral in peripherals %}
+                    <option data-serial-number="{{peripheral.serial_number}}">{{peripheral.name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-2">
+                <label class="form-label" for="peripheral-quantity">Quantity</label>
+                <input type="number" id="peripheral-quantity" min="1" class="form-control"
+                       onkeyup="if(value<1) value=1;">
+            </div>
+
+            <div class="col-1">
+                <button type="button"
+                        class="btn btn-light focus-ring focus-ring-dark border border-black text-center text-nowrap align-bottom my-4"
+                        id="add-button-peripheral">Add &#62&#62
+                </button>
+            </div>
+
+            <div class="col-6">
+                <table class="table table-striped table-bordered table-hover table-sm text-center">
+                    <thead>
+                    <tr>
+                        <th scope="col">Peripheral Name</th>
+                        <th scope="col">Serial Number</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody class="table-group-divider" id="table-body-peripheral">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <hr class="mb-3">
+
+    <div class="row">
+        <div class="col">
+            <h4 class="fs-5">Devices</h4>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <label for="device-category" class="form-label">Device Categories:</label>
+                <select class="form-select" id="device-category">
+                    <option value=""> -- select an option --</option>
+                    {% for device_category in device_categories %}
+                        <option>{{device_category.name}}</option>
+                    {% endfor %%}
+                </select>
+            </div>
+            <div class="col-2">
+                <label for="oem-brand" class="form-label">OEM Brand:</label>
+                <select class="form-select" id="oem-brand">
+                    <option value=""> -- select an option --</option>
+                    <option>Apple</option>
+                    <option>Others</option>
+                </select>
+            </div>
+            <div class="col-1">
+                <label class="form-label" for="device-category-quantity">Quantity</label>
+                <input type="number" id="device-category-quantity" min="1"
+                       class="form-control"
+                       onkeyup="if(value<1) value=1;">
+            </div>
+
+            <div class="col-1">
+                <button type="button"
+                        class="btn btn-light focus-ring focus-ring-dark border border-black text-center text-nowrap align-bottom my-4"
+                        id="add-button-device-category">Add &#62&#62
+                </button>
+            </div>
+
+            <div class="col-6">
+                <table class="table table-striped table-bordered table-hover table-sm text-center">
+                    <thead>
+                    <tr>
+                        <th scope="col">Device Category</th>
+                        <th scope="col">OEM Brand</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody class="table-group-divider" id="table-body-device-caregory">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <hr class="mb-4">
+
+
+    <div class="form-floating mb-5 mt-3">
+        <textarea class="form-control border border-primary" id="remark" name="remark"
+                  placeholder="remark" style="height:100px"></textarea>
+        <label for="remark">Remarks</label>
+    </div>
+
+    <div class="mb-3 mt-3">
+        <button type="submit" class="btn btn-primary focus-ring focus-ring-dark btn-lg" id="sumbit-button">Request</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+
+    $(document).ready(function () {
+      // For Spare Parts
+      let numberOfRows_SpareParts;
+      numberOfRows_SpareParts =0;
+      $("#add-button-spare-part").click(function(){
+        if ( $("#spare-part").val() != ''  &&  $("#spare-part-quantity").val() >= 1 ) {
+          let sparePareName = $("#spare-part").children().filter("option:selected").val();
+          let sparePartSerialNumber = $("#spare-part").children().filter("option:selected").attr("data-serial-number");
+          let sparePartQuantity = $("#spare-part-quantity").val();
+
+          let tableRowElement = $("<tr>");
+          tableRowElement.attr("id", `table-row-spare-part-${numberOfRows_SpareParts+1}`);
+          // Spare Pare Name
+          let tableDataElement_sparePartName = $("<td>");
+          let inputElement_sparePartName = $("<input>");
+          inputElement_sparePartName.addClass("form-control bg-transparent border-0 text-center");
+          inputElement_sparePartName.attr("type", "text");
+          inputElement_sparePartName.val(sparePareName);
+          inputElement_sparePartName.attr("id", `spare-part-added-name-${numberOfRows_SpareParts + 1}`);
+          inputElement_sparePartName.attr("name", `spare-part-added-name-${numberOfRows_SpareParts + 1}`);
+          inputElement_sparePartName.attr("required", "");
+          inputElement_sparePartName.attr("readonly", "");
+          tableDataElement_sparePartName.append(inputElement_sparePartName);
+          // Spare Part Serial Number
+          let tableDataElement_serialNumber = $("<td>");
+          let inputElement_serialNumber = $("<input>");
+          inputElement_serialNumber.addClass("form-control bg-transparent border-0 text-center");
+          inputElement_serialNumber.attr("type", "text");
+          inputElement_serialNumber.val(sparePartSerialNumber);
+          inputElement_serialNumber.attr("id", `spare-part-added-serial-number-${numberOfRows_SpareParts + 1}`);
+          inputElement_serialNumber.attr("name", `spare-part-added-serial-number-${numberOfRows_SpareParts + 1}`);
+          inputElement_serialNumber.attr("required", "");
+          inputElement_serialNumber.attr("readonly", "");
+          tableDataElement_serialNumber.append(inputElement_serialNumber);
+          // Spare Part Quantity
+          let tableDataElement_sparePareQuantity = $("<td>");
+          let inputElement_sparePareQuatity = $("<input>");
+          inputElement_sparePareQuatity.addClass("form-control bg-transparent border-0 text-center");
+          inputElement_sparePareQuatity.attr("type", "text");
+          inputElement_sparePareQuatity.val(sparePartQuantity);
+          inputElement_sparePareQuatity.attr("id", `spare-part-added-quantity-${numberOfRows_SpareParts + 1}`);
+          inputElement_sparePareQuatity.attr("name", `spare-part-added-quantity-${numberOfRows_SpareParts + 1}`);
+          inputElement_sparePareQuatity.attr("required", "");
+          inputElement_sparePareQuatity.attr("readonly", "");
+          tableDataElement_sparePareQuantity.append(inputElement_sparePareQuatity);
+          // Create Delete Button
+          let tableDataElement_deleteButton = $("<td>");
+          let buttonElement_deleteButton = $("<button>").text("Delete");
+          buttonElement_deleteButton.attr("type", "button");
+          buttonElement_deleteButton.addClass("btn btn-danger delete-spare-part-button btn-sm");
+          tableDataElement_deleteButton.append(buttonElement_deleteButton);
+
+          // Append To Table Row
+          tableRowElement.append(tableDataElement_sparePartName);
+          tableRowElement.append(tableDataElement_serialNumber);
+          tableRowElement.append(tableDataElement_sparePareQuantity);
+          tableRowElement.append(tableDataElement_deleteButton);
+          // Append To Table Body
+          $("#table-body-spare-part").append(tableRowElement);
+
+          numberOfRows_SpareParts++;
+        }
+      });
+
+      // Deleting Spare Parts Rows Functionallity
+      $('body').on('click', '.delete-spare-part-button', function (e){
+        let rowTableOfPart = $(this).parent().parent();
+        rowTableOfPart.remove();
+        numberOfRows_SpareParts--;
+
+        // change ids
+        let rowsOfTableBody = $("#table-body-spare-part").children();
+
+        for (let i=0; i < rowsOfTableBody.length; i++) {
+          console.log(rowsOfTableBody[i]);
+          $(rowsOfTableBody[i]).attr("id", `table-row-spare-part-${i+1}`);     // <tr>-s
+
+          let tableDatasOfRow = $(rowsOfTableBody[i]).children();
+          // Change spare part name of item
+          let tableData_sparePartName = $(tableDatasOfRow[0]).children()[0];       // Part Name
+          $(tableData_sparePartName).attr("id", `spare-part-added-name-${i+1}`);
+          let tableData_SerialNumber = $(tableDatasOfRow[1]).children()[0];           // Serial Number
+          $(tableData_SerialNumber).attr("id", `spare-part-added-serial-number-${i+1}`);
+          let tableData_quantity = $(tableDatasOfRow[2]).children()[0];
+          $(tableData_quantity).attr("id", `spare-part-added-quantity-${i+1}`);
+
+        }
+      });
+
+
+      let numberOfRows_peripherals;
+      numberOfRows_peripherals = 0;
+      $("#add-button-peripheral").click(function(){
+        if ($("#peripheral").val() != "" && $("#peripheral-quantity").val() >= 1) {
+          let peripheralName = $("#peripheral").children().filter("option:selected").val();
+          let peripheralSerialNumber = $("#peripheral").children().filter("option:selected").attr("data-serial-number");
+          let peripheralQuantity = $("#peripheral-quantity").val();
+
+          let tableRowElement = $("<tr>");
+          tableRowElement.attr("id", `table-row-peripheral-${numberOfRows_peripherals+1}`);
+          // Peripheral Name
+          let tableDataElement_peripheralName = $("<td>");
+          let inputElement_peripheralName = $("<input>");
+          inputElement_peripheralName.addClass("form-control bg-transparent border-0 text-center");
+          inputElement_peripheralName.attr("type", "text");
+          inputElement_peripheralName.val(peripheralName);
+          inputElement_peripheralName.attr("id", `peripheral-added-name-${numberOfRows_peripherals + 1}`);
+          inputElement_peripheralName.attr("name", `peripheral-added-name-${numberOfRows_peripherals + 1}`);
+          inputElement_peripheralName.attr("required", "");
+          inputElement_peripheralName.attr("readonly", "");
+          tableDataElement_peripheralName.append(inputElement_peripheralName);
+          // Peripheral Serial Number
+          let tableDataElement_serialNumber = $("<td>");
+          let inputElement_serialNumber = $("<input>");
+          inputElement_serialNumber.addClass("form-control bg-transparent border-0 text-center");
+          inputElement_serialNumber.attr("type", "text");
+          inputElement_serialNumber.val(peripheralSerialNumber);
+          inputElement_serialNumber.attr("id", `peripheral-added-serial-number-${numberOfRows_peripherals + 1}`);
+          inputElement_serialNumber.attr("name", `peripheral-added-serial-number-${numberOfRows_peripherals + 1}`);
+          inputElement_serialNumber.attr("required", "");
+          inputElement_serialNumber.attr("readonly", "");
+          tableDataElement_serialNumber.append(inputElement_serialNumber);
+          // Peripheral Quantity
+          let tableDataElement_peripheralQuantity = $("<td>");
+          let inputElement_peripheralQuatity = $("<input>");
+          inputElement_peripheralQuatity.addClass("form-control bg-transparent border-0 text-center");
+          inputElement_peripheralQuatity.attr("type", "text");
+          inputElement_peripheralQuatity.val(peripheralQuantity);
+          inputElement_peripheralQuatity.attr("id", `peripheral-added-quantity-${numberOfRows_peripherals + 1}`);
+          inputElement_peripheralQuatity.attr("name", `peripheral-added-quantity-${numberOfRows_peripherals + 1}`);
+          inputElement_peripheralQuatity.attr("required", "");
+          inputElement_peripheralQuatity.attr("readonly", "");
+          tableDataElement_peripheralQuantity.append(inputElement_peripheralQuatity);
+          // Create Delete Button
+          let tableDataElement_deleteButton = $("<td>");
+          let buttonElement_deleteButton = $("<button>").text("Delete");
+          buttonElement_deleteButton.attr("type", "button");
+          buttonElement_deleteButton.addClass("btn btn-danger delete-peripheral-button btn-sm");
+          tableDataElement_deleteButton.append(buttonElement_deleteButton);
+
+          // Append To Table Row
+          tableRowElement.append(tableDataElement_peripheralName);
+          tableRowElement.append(tableDataElement_serialNumber);
+          tableRowElement.append(tableDataElement_peripheralQuantity);
+          tableRowElement.append(tableDataElement_deleteButton);
+          // Append To Table Body
+          $("#table-body-peripheral").append(tableRowElement);
+
+          numberOfRows_peripherals++;
+        }
+      });
+
+      $('body').on('click', '.delete-peripheral-button', function (e){
+        let rowTableOfPart = $(this).parent().parent();
+        rowTableOfPart.remove();
+        numberOfRows_peripherals--;
+
+        // change ids
+        let rowsOfTableBody = $("#table-body-peripheral").children();
+
+        for (let i=0; i < rowsOfTableBody.length; i++) {
+          console.log(rowsOfTableBody[i]);
+          $(rowsOfTableBody[i]).attr("id", `table-row-peripheral-${i+1}`);     // <tr>-s
+
+          let tableDatasOfRow = $(rowsOfTableBody[i]).children();
+          // Change spare part name of item
+          let tableData_sparePartName = $(tableDatasOfRow[0]).children()[0];       // Part Name
+          $(tableData_sparePartName).attr("id", `peripheral-added-name-${i+1}`);
+          let tableData_SerialNumber = $(tableDatasOfRow[1]).children()[0];           // Serial Number
+          $(tableData_SerialNumber).attr("id", `peripheral-added-serial-number-${i+1}`);
+          let tableData_quantity = $(tableDatasOfRow[2]).children()[0];
+          $(tableData_quantity).attr("id", `peripheral-added-quantity-${i+1}`);
+
+        }
+      });
+
+
+      let numberOfRows_deviceCategories;
+      numberOfRows_deviceCategories = 0;
+      $("#add-button-device-category").click(function(){
+        if ($("#device-category").val() != "" && $("#device-category").val() != "" && $("#device-category-quantity").val() >=1) {
+          let deviceCategoryName = $("#device-category").children().filter("option:selected").val();
+          let oemBrandOfDeviceCategory = $("#oem-brand").children().filter("option:selected").val();
+          let deviceCategoryQuantity = $("#device-category-quantity").val();
+
+          let tableRowElement = $("<tr>");
+          tableRowElement.attr("id", `table-row-device-category-${numberOfRows_deviceCategories+1}`);
+          // Device Category Name
+          let tableDataElement_deviceCategoryName = $("<td>");
+          let inputElement_deviceCategoryName = $("<input>");
+          inputElement_deviceCategoryName.addClass("form-control bg-transparent border-0 text-center");
+          inputElement_deviceCategoryName.attr("type", "text");
+          inputElement_deviceCategoryName.val(deviceCategoryName);
+          inputElement_deviceCategoryName.attr("id", `device-category-added-name-${numberOfRows_deviceCategories + 1}`);
+          inputElement_deviceCategoryName.attr("name", `device-category-added-name-${numberOfRows_deviceCategories + 1}`);
+          inputElement_deviceCategoryName.attr("required", "");
+          inputElement_deviceCategoryName.attr("readonly", "");
+          tableDataElement_deviceCategoryName.append(inputElement_deviceCategoryName);
+          // OEM-Brand of Device Category
+          let tableDataElement_oemBrand = $("<td>");
+          let inputElement_oemBrand = $("<input>");
+          inputElement_oemBrand.addClass("form-control bg-transparent border-0 text-center");
+          inputElement_oemBrand.attr("type", "text");
+          inputElement_oemBrand.val(oemBrandOfDeviceCategory);
+          inputElement_oemBrand.attr("id", `device-category-added-oem-brand-${numberOfRows_deviceCategories + 1}`);
+          inputElement_oemBrand.attr("name", `device-category-added-oem-brand-${numberOfRows_deviceCategories + 1}`);
+          inputElement_oemBrand.attr("required", "");
+          inputElement_oemBrand.attr("readonly", "");
+          tableDataElement_oemBrand.append(inputElement_oemBrand);
+          // Device Category Quantity
+          let tableDataElement_deviceCategoryQuantity = $("<td>");
+          let inputElement_deviceCategoryQuatity = $("<input>");
+          inputElement_deviceCategoryQuatity.addClass("form-control bg-transparent border-0 text-center");
+          inputElement_deviceCategoryQuatity.attr("type", "text");
+          inputElement_deviceCategoryQuatity.val(deviceCategoryQuantity);
+          inputElement_deviceCategoryQuatity.attr("id", `device-category-added-quantity-${numberOfRows_deviceCategories + 1}`);
+          inputElement_deviceCategoryQuatity.attr("name", `device-category-added-quantity-${numberOfRows_deviceCategories + 1}`);
+          inputElement_deviceCategoryQuatity.attr("required", "");
+          inputElement_deviceCategoryQuatity.attr("readonly", "");
+          tableDataElement_deviceCategoryQuantity.append(inputElement_deviceCategoryQuatity);
+          // Create Delete Button
+          let tableDataElement_deleteButton = $("<td>");
+          let buttonElement_deleteButton = $("<button>").text("Delete");
+          buttonElement_deleteButton.attr("type", "button");
+          buttonElement_deleteButton.addClass("btn btn-danger delete-device-category-button btn-sm");
+          tableDataElement_deleteButton.append(buttonElement_deleteButton);
+
+          // Append To Table Row
+          tableRowElement.append(tableDataElement_deviceCategoryName);
+          tableRowElement.append(tableDataElement_oemBrand);
+          tableRowElement.append(tableDataElement_deviceCategoryQuantity);
+          tableRowElement.append(tableDataElement_deleteButton);
+          // Append To Table Body
+          $("#table-body-device-caregory").append(tableRowElement);
+
+          numberOfRows_deviceCategories++;
+        }
+      });
+
+      $('body').on('click', '.delete-device-category-button', function (e){
+        let rowTableOfPart = $(this).parent().parent();
+        rowTableOfPart.remove();
+        numberOfRows_deviceCategories--;
+
+        // change ids
+        let rowsOfTableBody = $("#table-body-device-caregory").children();
+
+        for (let i=0; i < rowsOfTableBody.length; i++) {
+          console.log(rowsOfTableBody[i]);
+          $(rowsOfTableBody[i]).attr("id", `table-row-device-category-${i+1}`);     // <tr>-s
+
+          let tableDatasOfRow = $(rowsOfTableBody[i]).children();
+          // Change spare part name of item
+          let tableData_deviceCategoryName = $(tableDatasOfRow[0]).children()[0];       // Part Name
+          $(tableData_deviceCategoryName).attr("id", `device-category-added-name-${i+1}`);
+          let tableData_oemBrand = $(tableDatasOfRow[1]).children()[0];           // Serial Number
+          $(tableData_oemBrand).attr("id", `device-category-added-oem-brand-${i+1}`);
+          let tableData_quantity = $(tableDatasOfRow[2]).children()[0];
+          $(tableData_quantity).attr("id", `device-category-added-quantity-${i+1}`);
+
+        }
+      });
+
+
+      $("#add-device-form").on("submit", function(e) {
+        if ( $("#table-body-spare-part").children().length >= 1 ||  $("#table-body-peripheral").children().length >= 1 || $("#table-body-device-caregory").children().length >= 1) {
+        } else {
+            alert("You should add something in at least one table");
+            e.preventDefault();
+        }
+      });
+
+    });
+
+</script>
+{% endblock %}
