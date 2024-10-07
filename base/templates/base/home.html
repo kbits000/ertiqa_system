@@ -10,7 +10,9 @@
 <html lang="en" data-bs-theme="auto">
 
 <head>
-    <script type="text/javascript" src="{% static 'base/jQuery/code.jquery.com_jquery-3.7.0.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'base/jQuery/jquery.min.js' %}"></script>
+    <script src="{% static 'base/scripts/home/color-modes.js' %}"></script>
+
     {% block head %}{% endblock %}
     {% comment %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.3.3/chart.js"
@@ -18,7 +20,6 @@
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     {% endcomment %}
 
-    <script src="{% static 'base/scripts/home/color-modes.js' %}"></script>
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -331,7 +332,7 @@
 {% comment %}
 <script src="{% static 'base/scripts/home/cdnjs.cloudflare.com_ajax_libs_Chart.js_4.3.3_chart.js' %}"></script>
 {% endcomment %}
-<script type="text/javascript" src="{% static 'base/jQuery/code.jquery.com_jquery-3.7.0.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'base/jQuery/jquery.min.js' %}"></script>
 {% comment %}
 <script src="{% static 'base/scripts/home/dashboard.js' %}"></script>
 {% endcomment %}
