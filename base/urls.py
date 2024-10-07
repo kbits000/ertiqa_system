@@ -8,6 +8,7 @@ urlpatterns = [
     path('home/', views.home, name='home'),
     path('add-device/', views.addDevice, name='add-device'),            # TODO REMOVE
     path('manager/', views.home_manager, name='manager'),
+    path('manager/statistics', views.manager_statistics_main_page,name='manager-statistics'),
     path('manager/change-prices/', views.manager_change_prices, name='manager-change-prices'),
     path('manager/change-prices/windows/', views.manager_change_windows_price, name='manager-change-windows-price'),
     path('manager/change-prices/peripherals/', views.manager_change_peripherals_prices_list, name="manager-change-peripherals-prices"),
