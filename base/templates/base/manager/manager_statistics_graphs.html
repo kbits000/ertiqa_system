@@ -1,0 +1,195 @@
+{% extends 'base/manager/home_manager.html' %}
+
+{% load static %}
+
+{% block title %}OWLP Manager - Statistics Graphs{% endblock %}
+
+{% block head %}
+  <style>
+      /* Ensure the chart fills the container */
+      #chart-container {
+        width: 100% !important;
+        height: 100% !important; /* Adjust height as needed, for example: 500px */
+        position: absolute !important;
+      }
+      
+      canvas {
+        width: 100% !important;
+        height: 100% !important;
+      }
+  </style>
+
+  <script type="text/javascript" src="{% static 'base/jQuery/jquery.min.js' %}"></script>
+  <script src="{% static 'base/scripts/chartjs/chart.umd.min.js' %}"></script>
+  <script src="{% static 'base/scripts/chartjs/chartjs-plugin-datalabels.min.js' %}"></script>
+
+{% endblock %}
+
+{% block main %}
+    {% include "base/messages.html" %}
+    <div class="offcanvas offcanvas-end" id="demo">
+        <div class="offcanvas-header">
+          <h1 class="offcanvas-title">Filters</h1>
+          <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body">
+          <p>Some text lorem ipsum.</p>
+          <p>Some text lorem ipsum.</p><br>
+          <label for="from-date" class="form-label fw-bold">From:</label>
+          <input type="date" class="form-control" id="from-date" name="from-date" min="2000-01-01">
+          <label for="to-date" class="form-label fw-bold">To:</label>
+          <input type="date" class="form-control" id="to-date" name="to-date" max="2100-12-25" class="mb-3"><br><br>
+    
+          <label for="filter-lab-technicians" class="form-check-label fw-bold">Lab Technicians</label>
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="lab-technician-james" name="lab-technician-james"
+              value="James">
+            <label for="lab-technician-james" class="form-check-label">James</label>
+          </div>
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="lab-technician-adam" name="lab-technician-adam"
+              value="Adam">
+            <label for="lab-technician-adam" class="form-check-label">Adam</label>
+          </div>
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="lab-technician-michael" name="lab-technician-michael"
+              value="Michael">
+            <label for="lab-technician-michael" class="form-check-label mb-3">Michael</label>
+          </div>
+    
+          <label for="filter-device-types" class="form-check-label fw-bold">Device Types</label>
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="filter-laptops" name="filter-laptops"
+              value="filter-laptops">
+            <label for="filter-laptops" class="form-check-label">Laptops</label>
+          </div>
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="filter-pcs" name="filter-pcs" value="filter-pcs">
+            <label for="filter-pcs" class="form-check-label">PCs</label>
+          </div>
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="filter-tablets" name="filter-tablets"
+              value="filter-tablets">
+            <label for="filter-tablets" class="form-check-label">Tablets</label>
+          </div>
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="filter-2-in-1" name="filter-2-in-1" value="filter-2-in-1">
+            <label for="filter-2-in-1" class="form-check-label mb-3">2-in-1</label>
+          </div>
+    
+    
+          <label for="filter-device-brands" class="form-check-label fw-bold">Device Brands (OEM)</label>
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="filter-device-brand-dell" name="filter-device-brand-dell"
+              value="filter-device-brand-dell">
+            <label for="filter-device-brand-dell" class="form-check-label">Dell</label>
+          </div>
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="filter-device-brand-asus" name="filter-device-brand-asus"
+              value="filter-device-brand-asus">
+            <label for="filter-device-brand-asus" class="form-check-label">Asus</label>
+          </div>
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="filter-device-brand-acer"
+              name="filter-filter-device-brand-acer" value="filter-filter-device-brand-acer">
+            <label for="filter-filter-device-brand-acer" class="form-check-label">Acer</label>
+          </div>
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="filter-device-brand-hp" name="filter-filter-device-brand-hp"
+              value="filter-filter-device-brand-hp">
+            <label for="filter-filter-device-brand-hp" class="form-check-label">HP</label>
+          </div>
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="filter-device-brand-apple"
+              name="filter-filter-device-brand-apple" value="filter-filter-device-brand-apple">
+            <label for="filter-filter-device-brand-apple" class="form-check-label mb-3">Apple</label>
+          </div>
+    
+          <label for="filter-refurbished-scrapped" class="form-check-label fw-bold">Refurbished and/or Scrapped</label>
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="filter-refurbished" name="filter-refurbished"
+              value="filter-refurbished">
+            <label for="filter-refurbished" class="form-check-label">Refurbished</label>
+          </div>
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="filter-scrapped" name="filter-scrapped"
+              value="filter-scrapped">
+            <label for="filter-scrapped" class="form-check-label mb-3">Scrapped</label>
+          </div>
+    
+          <label for="filter-spare-parts" class="form-check-label fw-bold">Spare Parts</label>
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="filter-hdd" name="filter-hdd" value="filter-hdd">
+            <label for="filter-hdd" class="form-check-label">HDD</label>
+          </div>
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="filter-sdd" name="filter-sdd" value="filter-sdd">
+            <label for="filter-sdd" class="form-check-label">SDD</label>
+          </div>
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="filter-power-cable" name="filter-power-cable"
+              value="filter-power-cable">
+            <label for="filter-power-cable" class="form-check-label">Power Cable</label>
+          </div>
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="filter-rtc" name="filter-rtc" value="filter-rtc">
+            <label for="filter-rtc" class="form-check-label mb-3">RTC</label>
+          </div>
+    
+          <label for="filter-total-spendings" class="form-label fw-bold">Total Spendings</label><br>
+          <label for="filter-total-spendings" class="form-label">0 SAR - 1000 SAR &#38 above</label><br>
+          <input type="range" class="form-range" id="filter-total-spendings" name="vol" min="0" max="1000" value="1000"><br>
+    
+          <hr>
+          <button class="btn btn-primary" type="button" id="filter-apply-button">Apply</button>
+        </div>
+      </div>
+      
+      <button type="button" class="btn btn-primary mb-3" data-bs-toggle="offcanvas" data-bs-target="#demo">Filters</button>
+
+    <!-- Nav tabs -->
+    <nav>
+        <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="nav-devices-inspected-per-technician-tab" data-bs-toggle="tab" data-bs-target="#devices-inspected-per-technician" type="button" role="tab" aria-controls="devices-inspected-per-technician" aria-selected="true" tabindex="-1">Devices Inspected By Technician</button>
+            <button class="nav-link" id="nav-number-of-devices-inspected-tab" data-bs-toggle="tab" data-bs-target="#nav-number-of-devices-inspected" type="button" role="tab" aria-controls="nav-number-of-devices-inspected" aria-selected="false" tabindex="-1">Number of Devices Inspected</button>
+            <button class="nav-link" id="nav-number-of-inspected-devices-per-technician-tab" data-bs-toggle="tab" data-bs-target="#nav-number-of-inspected-devices-per-technician" type="button" role="tab" aria-controls="nav-number-of-inspected-devices-per-technician" aria-selected="false" tabindex="-1">Number of Inspected Devices Per Technician</button>
+            <button class="nav-link" id="nav-refurbishing-costs-tab" data-bs-toggle="tab" data-bs-target="#nav-refurbishing-costs" type="button" role="tab" aria-controls="nav-refurbishing-costs" aria-selected="false" tabindex="-1">Refurbishing Costs</button>
+            <button class="nav-link" id="nav-donated-devices-per-donor-tab" data-bs-toggle="tab" data-bs-target="#nav-donated-devices-per-donor" type="button" role="tab" aria-controls="nav-donated-devices-per-donor" aria-selected="false" tabindex="-1">Donated Devices Per Donor</button>
+        </div>
+    </nav>
+
+    <!-- Tab panes -->
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade active show" id="devices-inspected-per-technician" role="tabpanel" aria-labelledby="nav-devices-inspected-per-technician-tab">
+            <p>This is some placeholder content the <strong>Devices Inspected per Technician tab's</strong> associated content. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling. You can use it with tabs, pills, and any other <code>.nav</code>-powered navigation.</p>
+            <div id="chart-container">
+            <canvas id="myChart"></canvas>
+            </div>          
+        </div>
+        <div class="tab-pane fade" id="nav-number-of-devices-inspected" role="tabpanel" aria-labelledby="nav-number-of-devices-inspected-tab">
+            <p>This is some placeholder content the <strong>Number of Devices Inspected tab's</strong> associated content. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling. You can use it with tabs, pills, and any other <code>.nav</code>-powered navigation.</p>
+            <div id="chart-container">
+            <canvas id="myChart2"></canvas>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="nav-number-of-inspected-devices-per-technician" role="tabpanel" aria-labelledby="nav-number-of-inspected-devices-per-technician-tab">
+            <p>This is some placeholder content the <strong>Number of Inspected Devices per Technician tab's</strong> associated content. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling. You can use it with tabs, pills, and any other <code>.nav</code>-powered navigation.</p>
+            <div id="chart-container">
+            <canvas id="myChart3"></canvas>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="nav-refurbishing-costs" role="tabpanel" aria-labelledby="nav-refurbishing-costs-tab">
+            <p>This is some placeholder content the <strong>Refurbishing Costs tab's</strong> associated content. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling. You can use it with tabs, pills, and any other <code>.nav</code>-powered navigation.</p>
+            <div id="chart-container">
+            <canvas id="myChart4"></canvas>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="nav-donated-devices-per-donor" role="tabpanel" aria-labelledby="nav-donated-devices-per-donor-tab">
+            <p>This is some placeholder content the <strong>Donated Devices Per Donor tab's</strong> associated content. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling. You can use it with tabs, pills, and any other <code>.nav</code>-powered navigation.</p>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="{% static 'base/scripts/manager/manager_statistics_graphs.js' %}"></script>
+{% endblock %}
