@@ -447,6 +447,13 @@ def manager_general_statistics(request):
     else:
         return HttpResponseBadRequest('Not Allowed')
 
+@login_required(login_url='login')
+def manager_statistics_main_page(request):
+    if request.user.is_superuser:
+        context={}
+        return render(request, 'base/manager/manager_statistics.html', context=context)
+    else:
+        return HttpResponseBadRequest('Not Allowed')
 
 @login_required(login_url='login')
 def addDevice(request):
