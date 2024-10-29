@@ -9,6 +9,30 @@ This is a Django web application project developed for **[Ertiqa organization](h
 
 Please note that this project is currently **unfinished** and **not in use** by [Ertiqa](https://ertiqa.org/).
 
+## Table of Contents
+- [Database Design and Modeling](#database-design-and-modeling)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Running the Project](#running-the-project)
+- [Credits](#credits)
+- [Disclaimer on Assets](#disclaimer-on-assets)
+
+## Database Design and Modeling
+
+### Old Relational Data Model Before Refactoring
+
+![Old Relational Data Model Before Refactoring](docs/database_diagrams/CMMS_Table_DB_Diagram.PNG)
+
+### New Conceptual Data Model After Refactoring
+
+![New Conceptual Data Model After Refactoring](docs/database_diagrams/optimized_ertiqa_system_db_conceptual_data_model_white_background.svg)
+
+### New Relatioanl Data Model After Refactoring
+
+![New Relatioanl Data Model After Refactoring](docs/database_diagrams/optimized_ertiqa_system_db_conceptual_data_model_white_background.svg)
+
+
 ## Prerequisites
 
 Before you begin, ensure you have met the following requirements:
@@ -18,15 +42,6 @@ Before you begin, ensure you have met the following requirements:
 - **virtualenv** or **venv** for creating virtual environments.
 - **Git** installed for version control.
 - **[PostgreSQL](https://www.postgresql.org/)** database installed. See their website for instructions.
-
-## Table of Contents
-
-- [Installation](#installation)
-- [Usage](#usage)
-- [Running the Project](#running-the-project)
-- [Credits](#credits)
-- [Disclaimer on Assets](#disclaimer-on-assets)
-
 
 ## Installation
 
