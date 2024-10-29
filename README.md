@@ -13,8 +13,6 @@ Please note that this project is currently **unfinished** and **not in use** by 
 - [Database Design and Modeling](#database-design-and-modeling)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
-- [Usage](#usage)
-- [Running the Project](#running-the-project)
 - [Credits](#credits)
 - [Disclaimer on Assets](#disclaimer-on-assets)
 
